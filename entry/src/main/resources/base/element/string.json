@@ -1,0 +1,40 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "Moneytopia"
+    },
+    {
+      "name": "module_desc",
+      "value": "Moneytopia entry module"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Moneytopia main ability"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "Moneytopia"
+    },
+    {
+      "name": "expenses_title",
+      "value": "Expenses"
+    },
+    {
+      "name": "reports_title",
+      "value": "Reports"
+    },
+    {
+      "name": "analytics_title",
+      "value": "Analytics"
+    },
+    {
+      "name": "settings_title",
+      "value": "Settings"
+    },
+    {
+      "name": "add_expense_title",
+      "value": "Add Expense"
+    }
+  ]
+}
