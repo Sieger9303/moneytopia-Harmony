@@ -10,7 +10,7 @@ import ohos_app_cangjie_entry.state.*
 public class ExpensesPage {
     public func build(): Unit {
         Column(space: 18) {
-            HeaderCard(title: "Expenses", iconGlyph: "W", infoGlyph: "i", subtitle: "Track your spending today")
+            HeaderCard(title: "Expenses", iconName: "wallet", actionIconName: "info", subtitle: "Track your spending today")
 
             Column(space: 8) {
                 Text("Total Expenses Today")

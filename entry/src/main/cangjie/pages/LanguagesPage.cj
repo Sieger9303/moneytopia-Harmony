@@ -2,6 +2,7 @@ package ohos_app_cangjie_entry.pages
 
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
+import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.data.local.PreferenceStore
 
@@ -60,7 +61,7 @@ public class LanguagesPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Language", iconGlyph: "L", infoGlyph: "i", subtitle: "Select the app locale preference")
+            HeaderCard(title: "Language", iconName: "language", actionIconName: "info", subtitle: "Select the app locale preference")
 
             Column(space: 6) {
                 Text("Supported locales")
@@ -81,9 +82,11 @@ public class LanguagesPage {
             ForEach(this.options(), itemGeneratorFunc: { option: LanguageOption, _: Int64 =>
                 Row(space: 12) {
                     Row() {
-                        Text(if (option.code == this.selectedLanguageCode) { "*" } else { "L" })
-                            .fontSize(16)
-                            .fontColor(if (option.code == this.selectedLanguageCode) { 0xFFFFFFFF } else { 0xFF6750A4 })
+                        if (option.code == this.selectedLanguageCode) {
+                            AppIcon(name: "check", size: 16, color: 0xFFFFFFFF)
+                        } else {
+                            AppIcon(name: "language", size: 16, color: 0xFF6750A4)
+                        }
                     }
                     .width(36)
                     .height(36)

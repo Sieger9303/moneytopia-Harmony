@@ -3,6 +3,7 @@ package ohos_app_cangjie_entry.pages
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import std.collection.ArrayList
+import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.components.settings.CurrencyDialog
 import ohos_app_cangjie_entry.components.settings.DeleteConfirmDialog
@@ -33,12 +34,12 @@ public class SettingsPage {
         items
     }
 
-    private func glyphFor(headline: String): String {
-        if (headline == "Delete Transactions") { return "D" }
-        if (headline == "Language") { return "L" }
-        if (headline == "Categories") { return "C" }
-        if (headline == "Currency") { return "$" }
-        return "I"
+    private func iconNameFor(headline: String): String {
+        if (headline == "Delete Transactions") { return "delete" }
+        if (headline == "Language") { return "language" }
+        if (headline == "Categories") { return "categories" }
+        if (headline == "Currency") { return "currency" }
+        return "info"
     }
 
     private func languageLabel(languageCode: String): String {
@@ -85,7 +86,7 @@ public class SettingsPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Settings", iconGlyph: "S", infoGlyph: "i", subtitle: "Manage preferences and app data")
+            HeaderCard(title: "Settings", iconName: "settings", actionIconName: "info", subtitle: "Manage preferences and app data")
 
             Row(space: 12) {
                 Column(space: 5) {
@@ -120,9 +121,7 @@ public class SettingsPage {
             ForEach(this.menuItems(), itemGeneratorFunc: { item: MenuSettingItem, _: Int64 =>
                 Row(space: 12) {
                     Row() {
-                        Text(this.glyphFor(item.headlineContent))
-                            .fontSize(15)
-                            .fontColor(0xFF6750A4)
+                        AppIcon(name: this.iconNameFor(item.headlineContent), size: 15, color: 0xFF6750A4)
                     }
                     .width(38)
                     .height(38)

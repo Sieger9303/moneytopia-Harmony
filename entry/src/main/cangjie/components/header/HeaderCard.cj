@@ -6,17 +6,14 @@ import ohos.arkui.state_macro_manage.*
 @Component
 public class HeaderCard {
     @Prop var title: String
-    @Prop var iconGlyph: String
-    @Prop var infoGlyph: String
+    @Prop var iconName: String
+    @Prop var actionIconName: String
     @Prop var subtitle: String
 
     public func build(): Unit {
         Row(space: 12) {
             Row() {
-                Text(this.iconGlyph)
-                    .fontSize(22)
-                    .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF6750A4)
+                AppIcon(name: this.iconName, size: 22, color: 0xFF6750A4)
             }
             .width(48)
             .height(48)
@@ -40,10 +37,7 @@ public class HeaderCard {
             .alignItems(HorizontalAlign.Start)
 
             Row() {
-                Text(this.infoGlyph)
-                    .fontSize(15)
-                    .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF6750A4)
+                AppIcon(name: this.actionIconName, size: 16, color: 0xFF6750A4)
             }
             .width(40)
             .height(40)

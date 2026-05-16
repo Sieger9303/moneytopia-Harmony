@@ -26,7 +26,7 @@ public class CategoryPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Categories", iconGlyph: "C", infoGlyph: "i", subtitle: "Manage spending groups and icons")
+            HeaderCard(title: "Categories", iconName: "categories", actionIconName: "info", subtitle: "Manage spending groups and icons")
 
             Column(space: 10) {
                 Text("Category Name")

@@ -2,6 +2,7 @@ package ohos_app_cangjie_entry.components.about
 
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
+import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.runtime.RouteState
 
 @Component
@@ -12,9 +13,7 @@ public class SocialMediaLink {
     public func build(): Unit {
         Row(space: 10) {
             Row() {
-                Text("L")
-                    .fontSize(14)
-                    .fontColor(0xFF6558A8)
+                AppIcon(name: "link", size: 14, color: 0xFF6558A8)
             }
             .width(30)
             .height(30)

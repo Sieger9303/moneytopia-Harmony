@@ -5,6 +5,7 @@ import ohos.arkui.state_macro_manage.*
 import std.collection.ArrayList
 import ohos_app_cangjie_entry.components.about.Contributor
 import ohos_app_cangjie_entry.components.about.SocialMediaLink
+import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.components.header.HeaderCard
 
 @Component
@@ -20,7 +21,7 @@ public class AboutPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "About", iconGlyph: "M", infoGlyph: "i", subtitle: "App details, links, and contributors")
+            HeaderCard(title: "About", iconName: "about", actionIconName: "info", subtitle: "App details, links, and contributors")
 
             Column(space: 8) {
                 Row() {

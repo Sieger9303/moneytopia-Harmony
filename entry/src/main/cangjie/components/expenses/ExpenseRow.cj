@@ -3,6 +3,7 @@ package ohos_app_cangjie_entry.components.expenses
 import std.time.*
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
+import ohos_app_cangjie_entry.components.categories.resolveCategoryIcon
 import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.local.PreferenceStore
 import ohos_app_cangjie_entry.data.model.Expense
@@ -32,19 +33,21 @@ public class ExpenseRow {
         return "No note added"
     }
 
-    private func categoryGlyph(): String {
-        if (this.expense.category.size > 0) {
-            return "${this.expense.category[0]}"
+    private func categorySymbol(): String {
+        for (category in this.expenseStore.getCategories()) {
+            if (category.name == this.expense.category) {
+                return resolveCategoryIcon(category.icon)
+            }
         }
-        return "C"
+        return resolveCategoryIcon("Category")
     }
 
     public func build(): Unit {
         Column(space: 10) {
             Row(space: 12) {
                 Row() {
-                    Text(this.categoryGlyph())
-                        .fontSize(16)
+                    Text(this.categorySymbol())
+                        .fontSize(18)
                         .fontWeight(FontWeight.Medium)
                         .fontColor(0xFF6750A4)
                 }

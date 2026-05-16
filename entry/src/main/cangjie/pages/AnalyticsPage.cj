@@ -22,7 +22,7 @@ public class AnalyticsPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Analytics", iconGlyph: "A", infoGlyph: "i", subtitle: "Browse weekly, monthly, and yearly trends")
+            HeaderCard(title: "Analytics", iconName: "analytics", actionIconName: "info", subtitle: "Browse weekly, monthly, and yearly trends")
 
             Row(space: 8) {
                 Button("Weekly")
