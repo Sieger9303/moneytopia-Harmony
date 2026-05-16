@@ -2,9 +2,9 @@ package ohos_app_cangjie_entry.pages
 
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
-import ohos_app_cangjie_entry.runtime.RouteState
 import ohos_app_cangjie_entry.components.categories.IconPickerDialog
 import ohos_app_cangjie_entry.components.categories.resolveCategoryIcon
+import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.model.Category
 
@@ -25,50 +25,91 @@ public class CategoryPage {
     }
 
     public func build(): Unit {
-        Scroll() {
-            Column(space: 12) {
-                Text("Categories")
-                    .fontSize(24)
+        Column(space: 16) {
+            HeaderCard(title: "Categories", iconGlyph: "C", infoGlyph: "i", subtitle: "Manage spending groups and icons")
 
+            Column(space: 10) {
+                Text("Category Name")
+                    .fontSize(14)
+                    .fontColor(0xFF7B7388)
                 TextInput(placeholder: "Category name", text: this.draftName)
+                    .backgroundColor(0xFFFDF8FF)
+                    .borderRadius(20)
+                    .padding(left: 14, right: 14, top: 12, bottom: 12)
                     .onChange({ text =>
                         this.draftName = text
                     })
-
                 Text("Selected icon: ${resolveCategoryIcon(this.draftIcon)} ${this.draftIcon}")
-                Button("Choose Icon")
-                    .onClick({ _ =>
-                        this.showIconPicker = true
-                    })
-
+                    .fontSize(13)
+                    .fontColor(0xFF1C1B1F)
+                Row(space: 8) {
+                    Button("Choose Icon")
+                        .backgroundColor(0xFFF3EDF8)
+                        .borderRadius(20)
+                        .onClick({ _ =>
+                            this.showIconPicker = true
+                        })
+                    Button(this.submitLabel())
+                        .fontColor(0xFFFFFFFF)
+                        .backgroundColor(0xFF6750A4)
+                        .borderRadius(20)
+                        .enabled(this.draftName != "")
+                        .onClick({ _ =>
+                            if (this.editingId == "") {
+                                this.expenseStore.addCategory(this.draftName, this.draftIcon)
+                            } else {
+                                this.expenseStore.updateCategory(this.editingId, this.draftName, this.draftIcon)
+                                this.editingId = ""
+                            }
+                            this.draftName = ""
+                            this.draftIcon = "Category"
+                        })
+                }
                 IconPickerDialog(selectedIcon: this.draftIcon, visible: this.showIconPicker, draftIcon: this.draftIcon)
+            }
+            .padding(left: 16, right: 16, top: 16, bottom: 16)
+            .width(100.percent)
+            .borderRadius(26)
+            .backgroundColor(0xFFF8F1FF)
 
-                Button(this.submitLabel())
-                    .enabled(this.draftName != "")
-                    .onClick({ _ =>
-                        if (this.editingId == "") {
-                            this.expenseStore.addCategory(this.draftName, this.draftIcon)
-                        } else {
-                            this.expenseStore.updateCategory(this.editingId, this.draftName, this.draftIcon)
-                            this.editingId = ""
-                        }
-                        this.draftName = ""
-                        this.draftIcon = "Category"
-                    })
-
-                ForEach(this.expenseStore.getCategories(), itemGeneratorFunc: { category: Category, _: Int64 =>
+            ForEach(this.expenseStore.getCategories(), itemGeneratorFunc: { category: Category, _: Int64 =>
+                Row(space: 12) {
                     Row() {
-                        Column() {
-                            Text("${resolveCategoryIcon(category.icon)} ${category.name}")
-                            Text(category.icon)
-                        }
+                        Text(resolveCategoryIcon(category.icon))
+                            .fontSize(18)
+                            .fontColor(0xFF6750A4)
+                    }
+                    .width(42)
+                    .height(42)
+                    .justifyContent(FlexAlign.Center)
+                    .alignItems(VerticalAlign.Center)
+                    .borderRadius(14)
+                    .backgroundColor(0xFFEFE6FD)
+
+                    Column(space: 3) {
+                        Text(category.name)
+                            .fontSize(16)
+                            .fontColor(0xFF1C1B1F)
+                        Text(category.icon)
+                            .fontSize(12)
+                            .fontColor(0xFF7B7388)
+                    }
+                    .width(42.percent)
+                    .alignItems(HorizontalAlign.Start)
+
+                    Row(space: 6) {
                         Button("Edit")
+                            .backgroundColor(0xFFF3EDF8)
+                            .borderRadius(16)
                             .onClick({ _ =>
                                 this.editingId = category.id
                                 this.draftName = category.name
                                 this.draftIcon = category.icon
                             })
                         Button("Delete")
+                            .fontColor(0xFFC84C58)
+                            .backgroundColor(0xFFFFF0F2)
+                            .borderRadius(16)
                             .onClick({ _ =>
                                 this.expenseStore.deleteCategory(category.id)
                                 if (this.editingId == category.id) {
@@ -78,16 +119,17 @@ public class CategoryPage {
                                 }
                             })
                     }
-                }, keyGeneratorFunc: { category: Category, _: Int64 =>
-                    category.id
-                })
-
-                Button("Back to Settings")
-                    .onClick({ _ =>
-                        RouteState.navigate("settings")
-                    })
-            }
-            .padding(16)
+                }
+                .padding(left: 14, right: 14, top: 14, bottom: 14)
+                .width(100.percent)
+                .alignItems(VerticalAlign.Center)
+                .justifyContent(FlexAlign.SpaceBetween)
+                .borderRadius(24)
+                .backgroundColor(0xFFFDF8FF)
+            }, keyGeneratorFunc: { category: Category, _: Int64 =>
+                category.id
+            })
         }
+        .width(100.percent)
     }
 }

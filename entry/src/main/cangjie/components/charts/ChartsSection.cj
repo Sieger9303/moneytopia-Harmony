@@ -48,12 +48,25 @@ public class ChartsSection {
     }
 
     public func build(): Unit {
-        Column(space: 12) {
-            Text(this.title)
-                .fontSize(20)
-            Text(this.dateRangeLabel())
-            Text(this.totalLabel())
-                .fontSize(24)
+        Column(space: 14) {
+            Column(space: 4) {
+                Text(this.title)
+                    .fontSize(20)
+                    .fontWeight(FontWeight.Medium)
+                    .fontColor(0xFF1C1B1F)
+                Text(this.dateRangeLabel())
+                    .fontSize(12)
+                    .fontColor(0xFF7B7388)
+                Text(this.totalLabel())
+                    .fontSize(24)
+                    .fontWeight(FontWeight.Medium)
+                    .fontColor(0xFF1C1B1F)
+            }
+            .padding(left: 18, right: 18, top: 18, bottom: 18)
+            .width(100.percent)
+            .borderRadius(24)
+            .backgroundColor(0xFFFDF8FF)
+
             ChartMarker(label: "Period breakdown")
             if (this.recurrenceName == "Weekly") {
                 WeeklyChart(expenses: this.periodExpenses())

@@ -7,9 +7,12 @@ import ohos_app_cangjie_entry.state.getYearlyDates
 @Component
 public class ExpensesByAllSection {
     public func build(): Unit {
-        Column(space: 12) {
+        Column(space: 14) {
             Text("All Transactions")
-                .fontSize(20)
+                .fontSize(18)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(0xFF1C1B1F)
+                .padding(left: 4)
             ExpenseDateGroupList(
                 dates: getYearlyDates(),
                 recurrenceName: "Yearly",
@@ -17,5 +20,6 @@ public class ExpensesByAllSection {
                 emptyMessage: "No reports available yet."
             )
         }
+        .width(100.percent)
     }
 }

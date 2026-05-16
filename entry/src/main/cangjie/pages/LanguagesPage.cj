@@ -4,7 +4,6 @@ import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.data.local.PreferenceStore
-import ohos_app_cangjie_entry.runtime.RouteState
 
 public class LanguageOption {
     public var code: String = ""
@@ -60,28 +59,59 @@ public class LanguagesPage {
     }
 
     public func build(): Unit {
-        Scroll() {
-            Column(space: 12) {
-                HeaderCard(title: "Language")
-                Text("Supported locales: English, German, French, Indonesian, Italian, Japanese, Korean, Chinese.")
-                Text("Selected: ${this.selectedLanguageLabel()}")
-                Text("The Android source page is unfinished, so this Harmony translation stores the intended locale choice in app preferences and keeps the screen functional instead of leaving it empty.")
+        Column(space: 16) {
+            HeaderCard(title: "Language", iconGlyph: "L", infoGlyph: "i", subtitle: "Select the app locale preference")
 
-                ForEach(this.options(), itemGeneratorFunc: { option: LanguageOption, _: Int64 =>
-                    Button(option.label)
-                        .onClick({ _ =>
-                            this.selectLanguage(option.code)
-                        })
-                }, keyGeneratorFunc: { option: LanguageOption, _: Int64 =>
-                    option.code
-                })
-                Text(this.statusMessage)
-                Button("Back to Settings")
-                    .onClick({ _ =>
-                        RouteState.navigate("settings")
-                    })
+            Column(space: 6) {
+                Text("Supported locales")
+                    .fontSize(16)
+                    .fontColor(0xFF1C1B1F)
+                Text("English, German, French, Indonesian, Italian, Japanese, Korean, Chinese.")
+                    .fontSize(12)
+                    .fontColor(0xFF7B7388)
+                Text("Selected: ${this.selectedLanguageLabel()}")
+                    .fontSize(13)
+                    .fontColor(0xFF1C1B1F)
             }
-            .padding(16)
+            .padding(left: 18, right: 18, top: 18, bottom: 18)
+            .width(100.percent)
+            .borderRadius(24)
+            .backgroundColor(0xFFFDF8FF)
+
+            ForEach(this.options(), itemGeneratorFunc: { option: LanguageOption, _: Int64 =>
+                Row(space: 12) {
+                    Row() {
+                        Text(if (option.code == this.selectedLanguageCode) { "*" } else { "L" })
+                            .fontSize(16)
+                            .fontColor(if (option.code == this.selectedLanguageCode) { 0xFFFFFFFF } else { 0xFF6750A4 })
+                    }
+                    .width(36)
+                    .height(36)
+                    .justifyContent(FlexAlign.Center)
+                    .alignItems(VerticalAlign.Center)
+                    .borderRadius(18)
+                    .backgroundColor(if (option.code == this.selectedLanguageCode) { 0xFF6750A4 } else { 0xFFEFE6FD })
+
+                    Text(option.label)
+                        .fontSize(16)
+                        .fontColor(0xFF1C1B1F)
+                }
+                .padding(left: 14, right: 14, top: 14, bottom: 14)
+                .width(100.percent)
+                .alignItems(VerticalAlign.Center)
+                .borderRadius(24)
+                .backgroundColor(0xFFFDF8FF)
+                .onClick({ _ =>
+                    this.selectLanguage(option.code)
+                })
+            }, keyGeneratorFunc: { option: LanguageOption, _: Int64 =>
+                option.code
+            })
+
+            Text(this.statusMessage)
+                .fontSize(12)
+                .fontColor(0xFF7B7388)
         }
+        .width(100.percent)
     }
 }

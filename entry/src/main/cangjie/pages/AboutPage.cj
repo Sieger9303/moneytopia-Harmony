@@ -6,7 +6,6 @@ import std.collection.ArrayList
 import ohos_app_cangjie_entry.components.about.Contributor
 import ohos_app_cangjie_entry.components.about.SocialMediaLink
 import ohos_app_cangjie_entry.components.header.HeaderCard
-import ohos_app_cangjie_entry.runtime.RouteState
 
 @Component
 public class AboutPage {
@@ -20,40 +19,62 @@ public class AboutPage {
     }
 
     public func build(): Unit {
-        Scroll() {
-            Column(space: 12) {
-                HeaderCard(title: "About")
-                Column(space: 6) {
+        Column(space: 16) {
+            HeaderCard(title: "About", iconGlyph: "M", infoGlyph: "i", subtitle: "App details, links, and contributors")
+
+            Column(space: 8) {
+                Row() {
                     Text("M")
-                        .fontSize(34)
-                    Text("Moneytopia")
-                        .fontSize(24)
-                    Text("v1.0.2")
+                        .fontSize(28)
+                        .fontColor(0xFF6750A4)
                 }
-                Text("App links")
-                    .fontSize(18)
-                Text("Open the developer links inside the app web view.")
-                SocialMediaLink(title: "GitHub", url: "https://github.com/dimrnhhh")
-                SocialMediaLink(title: "Behance", url: "https://www.behance.net/dimrnhhh")
-                SocialMediaLink(title: "LinkedIn", url: "https://www.linkedin.com/in/dimrnhhh/")
-                SocialMediaLink(title: "Instagram", url: "https://www.instagram.com/dimrnhhh/")
-                Text("Contributors")
-                    .fontSize(20)
-                ForEach(this.contributors(), itemGeneratorFunc: { contributor: Contributor, _: Int64 =>
-                    Column(space: 2) {
-                        Text(contributor.name)
-                        Text(contributor.role)
-                    }
-                    .padding(8)
-                }, keyGeneratorFunc: { contributor: Contributor, _: Int64 =>
-                    contributor.role
-                })
-                Button("Back to Settings")
-                    .onClick({ _ =>
-                        RouteState.navigate("settings")
-                    })
+                .width(72)
+                .height(72)
+                .justifyContent(FlexAlign.Center)
+                .alignItems(VerticalAlign.Center)
+                .borderRadius(24)
+                .backgroundColor(0xFFE8DDFF)
+                Text("Moneytopia")
+                    .fontSize(24)
+                    .fontColor(0xFF1C1B1F)
+                Text("v1.0.2")
+                    .fontSize(13)
+                    .fontColor(0xFF7B7388)
             }
-            .padding(16)
+            .padding(left: 20, right: 20, top: 20, bottom: 20)
+            .width(100.percent)
+            .alignItems(HorizontalAlign.Center)
+            .borderRadius(26)
+            .backgroundColor(0xFFFDF8FF)
+
+            Text("Social links")
+                .fontSize(18)
+                .fontColor(0xFF1C1B1F)
+            SocialMediaLink(title: "GitHub", url: "https://github.com/dimrnhhh")
+            SocialMediaLink(title: "Behance", url: "https://www.behance.net/dimrnhhh")
+            SocialMediaLink(title: "LinkedIn", url: "https://www.linkedin.com/in/dimrnhhh/")
+            SocialMediaLink(title: "Instagram", url: "https://www.instagram.com/dimrnhhh/")
+
+            Text("Contributors")
+                .fontSize(18)
+                .fontColor(0xFF1C1B1F)
+            ForEach(this.contributors(), itemGeneratorFunc: { contributor: Contributor, _: Int64 =>
+                Column(space: 3) {
+                    Text(contributor.name)
+                        .fontSize(16)
+                        .fontColor(0xFF1C1B1F)
+                    Text(contributor.role)
+                        .fontSize(12)
+                        .fontColor(0xFF7B7388)
+                }
+                .padding(left: 14, right: 14, top: 14, bottom: 14)
+                .width(100.percent)
+                .borderRadius(24)
+                .backgroundColor(0xFFFDF8FF)
+            }, keyGeneratorFunc: { contributor: Contributor, _: Int64 =>
+                contributor.role
+            })
         }
+        .width(100.percent)
     }
 }

@@ -32,18 +32,30 @@ public class ExpenseDateGroupList {
 
     public func build(): Unit {
         if (this.dates.size == 0) {
-            Text(this.emptyMessage)
+            Column(space: 10) {
+                Text(this.emptyMessage)
+                    .fontSize(15)
+                    .fontColor(0xFF6A6672)
+            }
+            .alignItems(HorizontalAlign.Center)
+            .padding(left: 18, right: 18, top: 22, bottom: 22)
+            .width(100.percent)
+            .borderRadius(24)
+            .backgroundColor(0xFFFDFBFF)
         } else {
-            ForEach(this.dates, itemGeneratorFunc: { dateValue: String, _: Int64 =>
-                ExpensesDayGroup(
-                    title: dateValue,
-                    expenses: this.expensesForDate(dateValue),
-                    total: this.totalForDate(dateValue),
-                    allowDelete: this.allowDelete
-                )
-            }, keyGeneratorFunc: { dateValue: String, _: Int64 =>
-                dateValue
-            })
+            Column(space: 14) {
+                ForEach(this.dates, itemGeneratorFunc: { dateValue: String, _: Int64 =>
+                    ExpensesDayGroup(
+                        title: dateValue,
+                        expenses: this.expensesForDate(dateValue),
+                        total: this.totalForDate(dateValue),
+                        allowDelete: this.allowDelete
+                    )
+                }, keyGeneratorFunc: { dateValue: String, _: Int64 =>
+                    dateValue
+                })
+            }
+            .width(100.percent)
         }
     }
 }
