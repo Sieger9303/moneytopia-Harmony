@@ -2,11 +2,11 @@ package ohos_app_cangjie_entry.pages
 
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
-import std.collection.ArrayList
 import ohos_app_cangjie_entry.components.about.Contributor
 import ohos_app_cangjie_entry.components.about.SocialMediaLink
 import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.components.header.HeaderCard
+import std.collection.ArrayList
 
 @Component
 public class AboutPage {
@@ -21,13 +21,18 @@ public class AboutPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "About", iconName: "about", actionIconName: "info", subtitle: "App details, links, and contributors")
+            HeaderCard(
+                title: "About",
+                iconName: "info",
+                actionIconName: "info",
+                subtitle: "App details, links, and contributors",
+                actionRoute: "settings",
+                dialogText: "Open the author links below to view the in-app web page. Use the bottom navigation or the Back button on the web page to return."
+            )
 
             Column(space: 8) {
                 Row() {
-                    Text("M")
-                        .fontSize(28)
-                        .fontColor(0xFF6750A4)
+                    AppIcon(name: "wallet", size: 28, color: 0xFF6750A4)
                 }
                 .width(72)
                 .height(72)

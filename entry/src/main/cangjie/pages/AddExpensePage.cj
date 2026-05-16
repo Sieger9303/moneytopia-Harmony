@@ -68,7 +68,7 @@ public class AddExpensePage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Add Expense", iconName: "add", actionIconName: "close", subtitle: "Create a new transaction")
+            HeaderCard(title: "Add Expense", iconName: "add", actionIconName: "", subtitle: "Create a new transaction", dialogText: "", actionRoute: "")
 
             Row(space: 8) {
                 Button("Discard")

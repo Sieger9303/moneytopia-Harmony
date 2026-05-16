@@ -3,7 +3,8 @@ package ohos_app_cangjie_entry.pages
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.categories.IconPickerDialog
-import ohos_app_cangjie_entry.components.categories.resolveCategoryIcon
+import ohos_app_cangjie_entry.components.categories.resolveCategoryIconName
+import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.model.Category
@@ -24,9 +25,22 @@ public class CategoryPage {
         return "Save Category"
     }
 
+    private func resetDraft(): Unit {
+        this.editingId = ""
+        this.draftName = ""
+        this.draftIcon = "Category"
+    }
+
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Categories", iconName: "categories", actionIconName: "info", subtitle: "Manage spending groups and icons")
+            HeaderCard(
+                title: "Categories",
+                iconName: "categories",
+                actionIconName: "info",
+                subtitle: "Manage spending groups and icons",
+                dialogText: "Add, edit, and delete categories. The icon picker stays wired to the shared category icon registry.",
+                actionRoute: ""
+            )
 
             Column(space: 10) {
                 Text("Category Name")
@@ -39,9 +53,22 @@ public class CategoryPage {
                     .onChange({ text =>
                         this.draftName = text
                     })
-                Text("Selected icon: ${resolveCategoryIcon(this.draftIcon)} ${this.draftIcon}")
-                    .fontSize(13)
-                    .fontColor(0xFF1C1B1F)
+                Row(space: 10) {
+                    Row() {
+                        AppIcon(name: resolveCategoryIconName(this.draftIcon), size: 18, color: 0xFF6750A4)
+                    }
+                    .width(36)
+                    .height(36)
+                    .justifyContent(FlexAlign.Center)
+                    .alignItems(VerticalAlign.Center)
+                    .borderRadius(18)
+                    .backgroundColor(0xFFEFE6FD)
+
+                    Text("Selected icon: ${this.draftIcon}")
+                        .fontSize(13)
+                        .fontColor(0xFF1C1B1F)
+                }
+                .alignItems(VerticalAlign.Center)
                 Row(space: 8) {
                     Button("Choose Icon")
                         .backgroundColor(0xFFF3EDF8)
@@ -59,10 +86,8 @@ public class CategoryPage {
                                 this.expenseStore.addCategory(this.draftName, this.draftIcon)
                             } else {
                                 this.expenseStore.updateCategory(this.editingId, this.draftName, this.draftIcon)
-                                this.editingId = ""
                             }
-                            this.draftName = ""
-                            this.draftIcon = "Category"
+                            this.resetDraft()
                         })
                 }
                 IconPickerDialog(selectedIcon: this.draftIcon, visible: this.showIconPicker, draftIcon: this.draftIcon)
@@ -75,9 +100,7 @@ public class CategoryPage {
             ForEach(this.expenseStore.getCategories(), itemGeneratorFunc: { category: Category, _: Int64 =>
                 Row(space: 12) {
                     Row() {
-                        Text(resolveCategoryIcon(category.icon))
-                            .fontSize(18)
-                            .fontColor(0xFF6750A4)
+                        AppIcon(name: resolveCategoryIconName(category.icon), size: 18, color: 0xFF6750A4)
                     }
                     .width(42)
                     .height(42)
@@ -113,9 +136,7 @@ public class CategoryPage {
                             .onClick({ _ =>
                                 this.expenseStore.deleteCategory(category.id)
                                 if (this.editingId == category.id) {
-                                    this.editingId = ""
-                                    this.draftName = ""
-                                    this.draftIcon = "Category"
+                                    this.resetDraft()
                                 }
                             })
                     }

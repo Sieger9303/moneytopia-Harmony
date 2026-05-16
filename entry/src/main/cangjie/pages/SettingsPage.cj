@@ -86,7 +86,7 @@ public class SettingsPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Settings", iconName: "settings", actionIconName: "info", subtitle: "Manage preferences and app data")
+            HeaderCard(title: "Settings", iconName: "settings", actionIconName: "info", subtitle: "Manage preferences and app data", dialogText: "Use the menu rows below to delete data, change language, edit categories, update currency, or open the about page.", actionRoute: "")
 
             Row(space: 12) {
                 Column(space: 5) {

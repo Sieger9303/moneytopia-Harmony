@@ -11,7 +11,7 @@ import ohos_app_cangjie_entry.state.getYearlyDateCount
 public class ReportsPage {
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Reports", iconName: "report", actionIconName: "info", subtitle: "Review grouped expense history")
+            HeaderCard(title: "Reports", iconName: "report", actionIconName: "info", subtitle: "Review grouped expense history", dialogText: "Reports shows grouped yearly history and keeps the non-delete behavior from the source report screen.", actionRoute: "")
 
             Row(space: 12) {
                 Column(space: 4) {

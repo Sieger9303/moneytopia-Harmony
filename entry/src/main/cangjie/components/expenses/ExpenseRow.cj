@@ -3,7 +3,8 @@ package ohos_app_cangjie_entry.components.expenses
 import std.time.*
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
-import ohos_app_cangjie_entry.components.categories.resolveCategoryIcon
+import ohos_app_cangjie_entry.components.categories.resolveCategoryIconName
+import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.local.PreferenceStore
 import ohos_app_cangjie_entry.data.model.Expense
@@ -33,23 +34,20 @@ public class ExpenseRow {
         return "No note added"
     }
 
-    private func categorySymbol(): String {
+    private func categoryIconName(): String {
         for (category in this.expenseStore.getCategories()) {
             if (category.name == this.expense.category) {
-                return resolveCategoryIcon(category.icon)
+                return resolveCategoryIconName(category.icon)
             }
         }
-        return resolveCategoryIcon("Category")
+        return resolveCategoryIconName("Category")
     }
 
     public func build(): Unit {
         Column(space: 10) {
             Row(space: 12) {
                 Row() {
-                    Text(this.categorySymbol())
-                        .fontSize(18)
-                        .fontWeight(FontWeight.Medium)
-                        .fontColor(0xFF6750A4)
+                    AppIcon(name: this.categoryIconName(), size: 18, color: 0xFF6750A4)
                 }
                 .width(48)
                 .height(48)
@@ -86,18 +84,21 @@ public class ExpenseRow {
             .alignItems(VerticalAlign.Center)
 
             if (this.allowDelete && !this.showDeletePrompt) {
-                Row() {
-                    Button("Delete")
+                Row(space: 6) {
+                    AppIcon(name: "delete", size: 14, color: 0xFFC84C58)
+                    Text("Delete")
                         .fontSize(12)
                         .fontColor(0xFFC84C58)
-                        .backgroundColor(0xFFFFF0F2)
-                        .borderRadius(16)
-                        .onClick({ _ =>
-                            this.showDeletePrompt = true
-                        })
                 }
+                .padding(left: 12, right: 12, top: 8, bottom: 8)
+                .justifyContent(FlexAlign.Center)
+                .alignItems(VerticalAlign.Center)
+                .borderRadius(16)
+                .backgroundColor(0xFFFFF0F2)
+                .onClick({ _ =>
+                    this.showDeletePrompt = true
+                })
                 .width(100.percent)
-                .justifyContent(FlexAlign.End)
             }
 
             if (this.showDeletePrompt) {

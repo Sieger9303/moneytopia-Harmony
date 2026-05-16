@@ -10,10 +10,18 @@ public class SocialMediaLink {
     @Prop var title: String
     @Prop var url: String
 
+    private func iconName(): String {
+        if (this.title == "GitHub") { return "settings" }
+        if (this.title == "Behance") { return "analytics" }
+        if (this.title == "LinkedIn") { return "language" }
+        if (this.title == "Instagram") { return "wallet_simple" }
+        return "info"
+    }
+
     public func build(): Unit {
         Row(space: 10) {
             Row() {
-                AppIcon(name: "link", size: 14, color: 0xFF6558A8)
+                AppIcon(name: this.iconName(), size: 14, color: 0xFF6558A8)
             }
             .width(30)
             .height(30)

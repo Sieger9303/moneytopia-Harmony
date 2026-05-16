@@ -10,7 +10,7 @@ import ohos_app_cangjie_entry.state.*
 public class ExpensesPage {
     public func build(): Unit {
         Column(space: 18) {
-            HeaderCard(title: "Expenses", iconName: "wallet", actionIconName: "info", subtitle: "Track your spending today")
+            HeaderCard(title: "Expenses", iconName: "wallet", actionIconName: "info", subtitle: "Track your spending today", dialogText: "Review today's total, open the full reports page with See All, and delete entries directly from the expenses list.", actionRoute: "")
 
             Column(space: 8) {
                 Text("Total Expenses Today")

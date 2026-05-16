@@ -61,7 +61,7 @@ public class LanguagesPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Language", iconName: "language", actionIconName: "info", subtitle: "Select the app locale preference")
+            HeaderCard(title: "Language", iconName: "language", actionIconName: "info", subtitle: "Select the app locale preference", dialogText: "Language preference is stored locally in this Harmony pass. The source caution flow remains on the settings screen before entering this page.", actionRoute: "")
 
             Column(space: 6) {
                 Text("Supported locales")
@@ -83,7 +83,7 @@ public class LanguagesPage {
                 Row(space: 12) {
                     Row() {
                         if (option.code == this.selectedLanguageCode) {
-                            AppIcon(name: "check", size: 16, color: 0xFFFFFFFF)
+                            AppIcon(name: "info", size: 16, color: 0xFFFFFFFF)
                         } else {
                             AppIcon(name: "language", size: 16, color: 0xFF6750A4)
                         }
