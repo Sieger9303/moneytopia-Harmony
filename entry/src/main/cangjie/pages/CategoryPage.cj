@@ -9,6 +9,7 @@ import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.model.Category
 import ohos_app_cangjie_entry.runtime.RouteState
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class CategoryPage {
@@ -102,15 +103,16 @@ public class CategoryPage {
             Row(space: 10) {
                 Button("Back")
                     .width(48.percent)
-                    .backgroundColor(0xFFF3EDF8)
+                    .backgroundColor(AppTheme.surfaceSecondary())
+                    .fontColor(AppTheme.textPrimary())
                     .borderRadius(20)
                     .onClick({ _ =>
                         RouteState.navigate("settings")
                     })
                 Button("Add Category")
                     .width(48.percent)
-                    .fontColor(0xFFFFFFFF)
-                    .backgroundColor(0xFF6750A4)
+                    .fontColor(AppTheme.onBrandPrimary())
+                    .backgroundColor(AppTheme.brandPrimary())
                     .borderRadius(20)
                     .onClick({ _ =>
                         this.openAddDialog()
@@ -124,9 +126,10 @@ public class CategoryPage {
                     Text(if (this.showEditDialog) { "Edit Category" } else { "Add Category" })
                         .fontSize(18)
                         .fontWeight(FontWeight.Medium)
-                        .fontColor(0xFF1C1B1F)
+                        .fontColor(AppTheme.textPrimary())
                     TextInput(placeholder: "Category name", text: this.draftName)
-                        .backgroundColor(0xFFFDF8FF)
+                        .backgroundColor(AppTheme.surfacePrimary())
+                        .fontColor(AppTheme.textPrimary())
                         .borderRadius(20)
                         .padding(left: 14, right: 14, top: 12, bottom: 12)
                         .onChange({ text =>
@@ -134,28 +137,30 @@ public class CategoryPage {
                         })
                     Row(space: 10) {
                         Row() {
-                            AppIcon(name: resolveCategoryIconName(this.draftIcon), size: 18, color: 0xFF6750A4)
+                            AppIcon(name: resolveCategoryIconName(this.draftIcon), size: 18, color: Int64(AppTheme.brandPrimary()))
                         }
                         .width(36)
                         .height(36)
                         .justifyContent(FlexAlign.Center)
                         .alignItems(VerticalAlign.Center)
                         .borderRadius(18)
-                        .backgroundColor(0xFFEFE6FD)
-                        Text("Selected icon: ${this.draftIcon}")
+                        .backgroundColor(AppTheme.surfaceAccentSoft())
+                        Text("Selected icon: ")
                             .fontSize(13)
-                            .fontColor(0xFF1C1B1F)
+                            .fontColor(AppTheme.textPrimary())
                     }
                     .alignItems(VerticalAlign.Center)
                     Row(space: 8) {
                         Button("Choose Icon")
-                            .backgroundColor(0xFFF3EDF8)
+                            .backgroundColor(AppTheme.surfaceSecondary())
+                            .fontColor(AppTheme.textPrimary())
                             .borderRadius(20)
                             .onClick({ _ =>
                                 this.showIconPicker = true
                             })
                         Button("Cancel")
-                            .backgroundColor(0xFFF3EDF8)
+                            .backgroundColor(AppTheme.surfaceSecondary())
+                            .fontColor(AppTheme.textPrimary())
                             .borderRadius(20)
                             .onClick({ _ =>
                                 this.showAddDialog = false
@@ -163,8 +168,8 @@ public class CategoryPage {
                                 this.resetDraft()
                             })
                         Button(if (this.showEditDialog) { "Save" } else { "Add" })
-                            .fontColor(0xFFFFFFFF)
-                            .backgroundColor(0xFF6750A4)
+                            .fontColor(AppTheme.onBrandPrimary())
+                            .backgroundColor(AppTheme.brandPrimary())
                             .borderRadius(20)
                             .enabled(this.draftName != "")
                             .onClick({ _ =>
@@ -180,7 +185,7 @@ public class CategoryPage {
                 .padding(left: 16, right: 16, top: 16, bottom: 16)
                 .width(100.percent)
                 .borderRadius(26)
-                .backgroundColor(0xFFF8F1FF)
+                .backgroundColor(AppTheme.surfaceSelected())
             }
 
             if (this.showDeleteDialog) {
@@ -188,13 +193,14 @@ public class CategoryPage {
                     Text("Delete Category")
                         .fontSize(18)
                         .fontWeight(FontWeight.Medium)
-                        .fontColor(0xFF1C1B1F)
-                    Text("Are you sure you want to delete ${this.deleteLabel}?")
+                        .fontColor(AppTheme.textPrimary())
+                    Text("Are you sure you want to delete ?")
                         .fontSize(13)
-                        .fontColor(0xFF5F596B)
+                        .fontColor(AppTheme.textTertiary())
                     Row(space: 8) {
                         Button("Cancel")
-                            .backgroundColor(0xFFF3EDF8)
+                            .backgroundColor(AppTheme.surfaceSecondary())
+                            .fontColor(AppTheme.textPrimary())
                             .borderRadius(18)
                             .onClick({ _ =>
                                 this.showDeleteDialog = false
@@ -202,8 +208,8 @@ public class CategoryPage {
                                 this.deleteLabel = ""
                             })
                         Button("Delete")
-                            .fontColor(0xFFFFFFFF)
-                            .backgroundColor(0xFFC84C58)
+                            .fontColor(AppTheme.onBrandPrimary())
+                            .backgroundColor(AppTheme.dangerPrimary())
                             .borderRadius(18)
                             .onClick({ _ =>
                                 this.confirmDelete()
@@ -213,42 +219,43 @@ public class CategoryPage {
                 .padding(16)
                 .width(100.percent)
                 .borderRadius(22)
-                .backgroundColor(0xFFFFF8F8)
+                .backgroundColor(AppTheme.surfaceDangerPanel())
             }
 
             ForEach(this.expenseStore.getCategories(), itemGeneratorFunc: { category: Category, _: Int64 =>
                 Row(space: 12) {
                     Row() {
-                        AppIcon(name: resolveCategoryIconName(category.icon), size: 18, color: 0xFF6750A4)
+                        AppIcon(name: resolveCategoryIconName(category.icon), size: 18, color: Int64(AppTheme.brandPrimary()))
                     }
                     .width(42)
                     .height(42)
                     .justifyContent(FlexAlign.Center)
                     .alignItems(VerticalAlign.Center)
                     .borderRadius(14)
-                    .backgroundColor(0xFFEFE6FD)
+                    .backgroundColor(AppTheme.surfaceAccentSoft())
 
                     Column(space: 3) {
                         Text(category.name)
                             .fontSize(16)
-                            .fontColor(0xFF1C1B1F)
+                            .fontColor(AppTheme.textPrimary())
                         Text(category.icon)
                             .fontSize(12)
-                            .fontColor(0xFF7B7388)
+                            .fontColor(AppTheme.textSecondary())
                     }
                     .width(42.percent)
                     .alignItems(HorizontalAlign.Start)
 
                     Row(space: 6) {
                         Button("Edit")
-                            .backgroundColor(0xFFF3EDF8)
+                            .backgroundColor(AppTheme.surfaceSecondary())
+                            .fontColor(AppTheme.textPrimary())
                             .borderRadius(16)
                             .onClick({ _ =>
                                 this.openEditDialog(category)
                             })
                         Button("Delete")
-                            .fontColor(0xFFC84C58)
-                            .backgroundColor(0xFFFFF0F2)
+                            .fontColor(AppTheme.dangerPrimary())
+                            .backgroundColor(AppTheme.surfaceDangerSoft())
                             .borderRadius(16)
                             .onClick({ _ =>
                                 this.openDeleteDialog(category)
@@ -260,7 +267,7 @@ public class CategoryPage {
                 .alignItems(VerticalAlign.Center)
                 .justifyContent(FlexAlign.SpaceBetween)
                 .borderRadius(24)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
             }, keyGeneratorFunc: { category: Category, _: Int64 =>
                 category.id
             })

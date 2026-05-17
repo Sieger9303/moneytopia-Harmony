@@ -8,6 +8,7 @@ import ohos_app_cangjie_entry.state.getDailyExpensesForDate
 import ohos_app_cangjie_entry.state.getDailyTotalForDate
 import ohos_app_cangjie_entry.state.getYearlyExpensesForDate
 import ohos_app_cangjie_entry.state.getYearlyTotalForDate
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class ExpenseDateGroupList {
@@ -35,13 +36,13 @@ public class ExpenseDateGroupList {
             Column(space: 10) {
                 Text(this.emptyMessage)
                     .fontSize(15)
-                    .fontColor(0xFF6A6672)
+                    .fontColor(AppTheme.textSecondary())
             }
             .alignItems(HorizontalAlign.Center)
             .padding(left: 18, right: 18, top: 22, bottom: 22)
             .width(100.percent)
             .borderRadius(24)
-            .backgroundColor(0xFFFDFBFF)
+            .backgroundColor(AppTheme.surfaceElevated())
         } else {
             Column(space: 14) {
                 ForEach(this.dates, itemGeneratorFunc: { dateValue: String, _: Int64 =>

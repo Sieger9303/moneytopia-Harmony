@@ -5,6 +5,7 @@ import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.expenses.ExpensesByDaySection
 import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.state.*
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class ExpensesPage {
@@ -15,20 +16,20 @@ public class ExpensesPage {
             Column(space: 8) {
                 Text("Total Expenses Today")
                     .fontSize(15)
-                    .fontColor(0xFF7B7388)
+                    .fontColor(AppTheme.textSecondary())
                 Text(getDailyExpenseTotal())
                     .fontSize(32)
                     .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF1C1B1F)
+                    .fontColor(AppTheme.textPrimary())
                 Text("${getDailyExpenseCount()} transaction(s) today")
                     .fontSize(12)
-                    .fontColor(0xFF7B7388)
+                    .fontColor(AppTheme.textSecondary())
             }
             .padding(left: 20, right: 20, top: 24, bottom: 24)
             .width(100.percent)
             .alignItems(HorizontalAlign.Center)
             .borderRadius(30)
-            .backgroundColor(0xFFFDF8FF)
+            .backgroundColor(AppTheme.surfacePrimary())
 
             ExpensesByDaySection()
         }

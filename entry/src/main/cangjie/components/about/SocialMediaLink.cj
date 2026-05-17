@@ -4,6 +4,7 @@ import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.runtime.RouteState
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class SocialMediaLink {
@@ -21,22 +22,22 @@ public class SocialMediaLink {
     public func build(): Unit {
         Row(space: 10) {
             Row() {
-                AppIcon(name: this.iconName(), size: 14, color: 0xFF6558A8)
+                AppIcon(name: this.iconName(), size: 14, color: Int64(AppTheme.brandPrimary()))
             }
             .width(30)
             .height(30)
             .justifyContent(FlexAlign.Center)
             .alignItems(VerticalAlign.Center)
             .borderRadius(15)
-            .backgroundColor(0xFFE7E1FB)
+            .backgroundColor(AppTheme.surfaceAccentStrong())
 
             Column(space: 2) {
                 Text(this.title)
                     .fontSize(15)
-                    .fontColor(0xFF1C1B1F)
+                    .fontColor(AppTheme.textPrimary())
                 Text(this.url)
                     .fontSize(11)
-                    .fontColor(0xFF6A6672)
+                    .fontColor(AppTheme.textSecondary())
             }
             .width(70.percent)
             .alignItems(HorizontalAlign.Start)
@@ -46,7 +47,7 @@ public class SocialMediaLink {
         .justifyContent(FlexAlign.Start)
         .alignItems(VerticalAlign.Center)
         .borderRadius(20)
-        .backgroundColor(0xFFFFFFFF)
+        .backgroundColor(AppTheme.surfaceElevated())
         .onClick({ _ =>
             RouteState.navigateToLink(this.title, this.url)
         })

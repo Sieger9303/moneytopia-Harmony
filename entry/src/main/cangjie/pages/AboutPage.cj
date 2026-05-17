@@ -6,6 +6,7 @@ import ohos_app_cangjie_entry.components.about.Contributor
 import ohos_app_cangjie_entry.components.about.SocialMediaLink
 import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.components.header.HeaderCard
+import ohos_app_cangjie_entry.theme.AppTheme
 import std.collection.ArrayList
 
 @Component
@@ -32,30 +33,30 @@ public class AboutPage {
 
             Column(space: 8) {
                 Row() {
-                    AppIcon(name: "wallet", size: 28, color: 0xFF6750A4)
+                    AppIcon(name: "wallet", size: 28, color: Int64(AppTheme.brandPrimary()))
                 }
                 .width(72)
                 .height(72)
                 .justifyContent(FlexAlign.Center)
                 .alignItems(VerticalAlign.Center)
                 .borderRadius(24)
-                .backgroundColor(0xFFE8DDFF)
+                .backgroundColor(AppTheme.surfaceAccentStrong())
                 Text("Moneytopia")
                     .fontSize(24)
-                    .fontColor(0xFF1C1B1F)
+                    .fontColor(AppTheme.textPrimary())
                 Text("v1.0.2")
                     .fontSize(13)
-                    .fontColor(0xFF7B7388)
+                    .fontColor(AppTheme.textSecondary())
             }
             .padding(left: 20, right: 20, top: 20, bottom: 20)
             .width(100.percent)
             .alignItems(HorizontalAlign.Center)
             .borderRadius(26)
-            .backgroundColor(0xFFFDF8FF)
+            .backgroundColor(AppTheme.surfacePrimary())
 
             Text("Social links")
                 .fontSize(18)
-                .fontColor(0xFF1C1B1F)
+                .fontColor(AppTheme.textPrimary())
             SocialMediaLink(title: "GitHub", url: "https://github.com/dimrnhhh")
             SocialMediaLink(title: "Behance", url: "https://www.behance.net/dimrnhhh")
             SocialMediaLink(title: "LinkedIn", url: "https://www.linkedin.com/in/dimrnhhh/")
@@ -63,20 +64,20 @@ public class AboutPage {
 
             Text("Contributors")
                 .fontSize(18)
-                .fontColor(0xFF1C1B1F)
+                .fontColor(AppTheme.textPrimary())
             ForEach(this.contributors(), itemGeneratorFunc: { contributor: Contributor, _: Int64 =>
                 Column(space: 3) {
                     Text(contributor.name)
                         .fontSize(16)
-                        .fontColor(0xFF1C1B1F)
+                        .fontColor(AppTheme.textPrimary())
                     Text(contributor.role)
                         .fontSize(12)
-                        .fontColor(0xFF7B7388)
+                        .fontColor(AppTheme.textSecondary())
                 }
                 .padding(left: 14, right: 14, top: 14, bottom: 14)
                 .width(100.percent)
                 .borderRadius(24)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
             }, keyGeneratorFunc: { contributor: Contributor, _: Int64 =>
                 contributor.role
             })

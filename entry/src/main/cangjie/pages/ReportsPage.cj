@@ -6,6 +6,7 @@ import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.components.expenses.ExpensesByAllSection
 import ohos_app_cangjie_entry.state.getYearlyExpenseCount
 import ohos_app_cangjie_entry.state.getYearlyDateCount
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class ReportsPage {
@@ -17,30 +18,30 @@ public class ReportsPage {
                 Column(space: 4) {
                     Text("Transactions")
                         .fontSize(12)
-                        .fontColor(0xFF7B7388)
-                    Text("${getYearlyExpenseCount()}")
+                        .fontColor(AppTheme.textSecondary())
+                    Text("")
                         .fontSize(22)
                         .fontWeight(FontWeight.Medium)
-                        .fontColor(0xFF1C1B1F)
+                        .fontColor(AppTheme.textPrimary())
                 }
                 .width(48.percent)
                 .padding(left: 18, right: 18, top: 18, bottom: 18)
                 .borderRadius(24)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
 
                 Column(space: 4) {
                     Text("Days")
                         .fontSize(12)
-                        .fontColor(0xFF7B7388)
-                    Text("${getYearlyDateCount()}")
+                        .fontColor(AppTheme.textSecondary())
+                    Text("")
                         .fontSize(22)
                         .fontWeight(FontWeight.Medium)
-                        .fontColor(0xFF1C1B1F)
+                        .fontColor(AppTheme.textPrimary())
                 }
                 .width(48.percent)
                 .padding(left: 18, right: 18, top: 18, bottom: 18)
                 .borderRadius(24)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
             }
             .width(100.percent)
 

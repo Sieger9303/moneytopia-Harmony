@@ -11,6 +11,7 @@ import ohos_app_cangjie_entry.components.settings.MenuSettingItem
 import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.local.PreferenceStore
 import ohos_app_cangjie_entry.runtime.RouteState
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class SettingsPage {
@@ -19,7 +20,7 @@ public class SettingsPage {
     @State var showCurrencyDialog: Bool = false
     @State var currencyDraft: String = ""
     @State var statusMessage: String = ""
-    @State var languageSummary: String = "English"
+    @State var languageSummary: String = "System settings"
 
     private let expenseStore = ExpenseStore()
     private let preferenceStore = PreferenceStore()
@@ -27,7 +28,7 @@ public class SettingsPage {
     private func menuItems(): ArrayList<MenuSettingItem> {
         let items = ArrayList<MenuSettingItem>()
         items.add(MenuSettingItem(headlineContent: "Delete Transactions", supportingContent: "Remove all saved expenses"))
-        items.add(MenuSettingItem(headlineContent: "Language", supportingContent: "Choose your app locale"))
+        items.add(MenuSettingItem(headlineContent: "Language", supportingContent: "Open the system language flow"))
         items.add(MenuSettingItem(headlineContent: "Categories", supportingContent: "Add, edit, or remove categories"))
         items.add(MenuSettingItem(headlineContent: "Currency", supportingContent: "Update the currency symbol"))
         items.add(MenuSettingItem(headlineContent: "About", supportingContent: "App details and social links"))
@@ -42,19 +43,8 @@ public class SettingsPage {
         return "info"
     }
 
-    private func languageLabel(languageCode: String): String {
-        if (languageCode == "de") { return "German" }
-        if (languageCode == "fr") { return "French" }
-        if (languageCode == "in") { return "Indonesian" }
-        if (languageCode == "it") { return "Italian" }
-        if (languageCode == "ja") { return "Japanese" }
-        if (languageCode == "ko") { return "Korean" }
-        if (languageCode == "zh") { return "Chinese" }
-        "English"
-    }
-
     private func refreshSummaries(): Unit {
-        this.languageSummary = this.languageLabel(this.preferenceStore.getLanguageCode())
+        this.languageSummary = "System settings"
         this.currencyDraft = this.preferenceStore.getCurrencySymbol()
     }
 
@@ -67,6 +57,7 @@ public class SettingsPage {
     private func confirmLanguageReset(): Unit {
         this.expenseStore.deleteAllExpenses()
         this.showLanguageDialog = false
+        this.statusMessage = "Transaction data cleared. Change the app language in system settings."
         RouteState.navigate("settings/languages")
     }
 
@@ -86,34 +77,34 @@ public class SettingsPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(title: "Settings", iconName: "settings", actionIconName: "info", subtitle: "Manage preferences and app data", dialogText: "Use the menu rows below to delete data, change language, edit categories, update currency, or open the about page.", actionRoute: "")
+            HeaderCard(title: "Settings", iconName: "settings", actionIconName: "info", subtitle: "Manage preferences and app data", dialogText: "Use the menu rows below to delete data, follow the language caution flow, edit categories, update currency, or open the about page.", actionRoute: "")
 
             Row(space: 12) {
                 Column(space: 5) {
                     Text("Currency")
                         .fontSize(12)
-                        .fontColor(0xFF7B7388)
+                        .fontColor(AppTheme.textSecondary())
                     Text(this.preferenceStore.getCurrencySymbol())
                         .fontSize(20)
-                        .fontColor(0xFF1C1B1F)
+                        .fontColor(AppTheme.textPrimary())
                 }
                 .width(48.percent)
                 .padding(left: 18, right: 18, top: 18, bottom: 18)
                 .borderRadius(24)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
 
                 Column(space: 5) {
                     Text("Language")
                         .fontSize(12)
-                        .fontColor(0xFF7B7388)
+                        .fontColor(AppTheme.textSecondary())
                     Text(this.languageSummary)
                         .fontSize(20)
-                        .fontColor(0xFF1C1B1F)
+                        .fontColor(AppTheme.textPrimary())
                 }
                 .width(48.percent)
                 .padding(left: 18, right: 18, top: 18, bottom: 18)
                 .borderRadius(24)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
             }
             .width(100.percent)
             .justifyContent(FlexAlign.SpaceBetween)
@@ -121,22 +112,22 @@ public class SettingsPage {
             ForEach(this.menuItems(), itemGeneratorFunc: { item: MenuSettingItem, _: Int64 =>
                 Row(space: 12) {
                     Row() {
-                        AppIcon(name: this.iconNameFor(item.headlineContent), size: 15, color: 0xFF6750A4)
+                        AppIcon(name: this.iconNameFor(item.headlineContent), size: 15, color: Int64(AppTheme.brandPrimary()))
                     }
                     .width(38)
                     .height(38)
                     .justifyContent(FlexAlign.Center)
                     .alignItems(VerticalAlign.Center)
                     .borderRadius(19)
-                    .backgroundColor(0xFFEFE6FD)
+                    .backgroundColor(AppTheme.surfaceAccentSoft())
 
                     Column(space: 3) {
                         Text(item.headlineContent)
                             .fontSize(16)
-                            .fontColor(0xFF1C1B1F)
+                            .fontColor(AppTheme.textPrimary())
                         Text(item.supportingContent)
                             .fontSize(12)
-                            .fontColor(0xFF7B7388)
+                            .fontColor(AppTheme.textSecondary())
                     }
                     .width(68.percent)
                     .alignItems(HorizontalAlign.Start)
@@ -145,7 +136,7 @@ public class SettingsPage {
                 .width(100.percent)
                 .alignItems(VerticalAlign.Center)
                 .borderRadius(24)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
                 .onClick({ _ =>
                     if (item.headlineContent == "Delete Transactions") {
                         this.showDeleteDialog = true
@@ -174,38 +165,38 @@ public class SettingsPage {
             if (this.showDeleteDialog) {
                 DeleteConfirmDialog(title: "Delete transactions?", message: "All transaction history that you have created will be deleted and cannot be canceled.")
                 Row(space: 8) {
-                    Button("Cancel").backgroundColor(0xFFF3EDF8).borderRadius(18).onClick({ _ => this.showDeleteDialog = false })
-                    Button("Delete").fontColor(0xFFFFFFFF).backgroundColor(0xFFC84C58).borderRadius(18).onClick({ _ => this.eraseAllTransactions() })
+                    Button("Cancel").backgroundColor(AppTheme.surfaceSecondary()).borderRadius(18).onClick({ _ => this.showDeleteDialog = false })
+                    Button("Delete").fontColor(AppTheme.onBrandPrimary()).backgroundColor(AppTheme.dangerPrimary()).borderRadius(18).onClick({ _ => this.eraseAllTransactions() })
                 }
             }
 
             if (this.showLanguageDialog) {
-                DeleteConfirmDialog(title: "Caution", message: "Changing language clears transaction history first. Continue?")
+                DeleteConfirmDialog(title: "Caution", message: "Changing language clears transaction history first. Continue to the system language flow?")
                 Row(space: 8) {
-                    Button("Cancel").backgroundColor(0xFFF3EDF8).borderRadius(18).onClick({ _ => this.showLanguageDialog = false })
-                    Button("Continue").fontColor(0xFFFFFFFF).backgroundColor(0xFF6750A4).borderRadius(18).onClick({ _ => this.confirmLanguageReset() })
+                    Button("Cancel").backgroundColor(AppTheme.surfaceSecondary()).borderRadius(18).onClick({ _ => this.showLanguageDialog = false })
+                    Button("Continue").fontColor(AppTheme.onBrandPrimary()).backgroundColor(AppTheme.brandPrimary()).borderRadius(18).onClick({ _ => this.confirmLanguageReset() })
                 }
             }
 
             if (this.showCurrencyDialog) {
                 CurrencyDialog(currentSymbol: this.currencyDraft)
                 TextInput(placeholder: "$", text: this.currencyDraft)
-                    .backgroundColor(0xFFFDF8FF)
+                    .backgroundColor(AppTheme.surfacePrimary())
                     .borderRadius(20)
                     .padding(left: 14, right: 14, top: 12, bottom: 12)
                     .onChange({ text =>
                         this.currencyDraft = text
                     })
                 Row(space: 8) {
-                    Button("Cancel").backgroundColor(0xFFF3EDF8).borderRadius(18).onClick({ _ => this.showCurrencyDialog = false })
-                    Button("Save").fontColor(0xFFFFFFFF).backgroundColor(0xFF6750A4).borderRadius(18).onClick({ _ => this.saveCurrency() })
+                    Button("Cancel").backgroundColor(AppTheme.surfaceSecondary()).borderRadius(18).onClick({ _ => this.showCurrencyDialog = false })
+                    Button("Save").fontColor(AppTheme.onBrandPrimary()).backgroundColor(AppTheme.brandPrimary()).borderRadius(18).onClick({ _ => this.saveCurrency() })
                 }
             }
 
             if (this.statusMessage != "") {
                 Text(this.statusMessage)
                     .fontSize(12)
-                    .fontColor(0xFF7B7388)
+                    .fontColor(AppTheme.textSecondary())
             }
         }
         .width(100.percent)

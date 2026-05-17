@@ -5,6 +5,7 @@ import ohos.arkui.state_macro_manage.*
 import std.collection.ArrayList
 import std.time.*
 import ohos_app_cangjie_entry.data.model.Expense
+import ohos_app_cangjie_entry.theme.AppTheme
 
 public class YearlyChartPoint {
     public var id: String = ""
@@ -53,18 +54,31 @@ public class YearlyChart {
     }
 
     public func build(): Unit {
-        Column(space: 6) {
+        Column(space: 10) {
             Text("Yearly spending")
                 .fontSize(16)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(AppTheme.textPrimary())
             ForEach(this.points(), itemGeneratorFunc: { point: YearlyChartPoint, _: Int64 =>
                 Row(space: 12) {
                     Text(point.label)
+                        .fontSize(13)
+                        .fontColor(AppTheme.textSecondary())
+                        .width(52.percent)
                     Text(point.total.toString())
+                        .fontSize(14)
+                        .fontWeight(FontWeight.Medium)
+                        .fontColor(AppTheme.brandPrimary())
                 }
+                .width(100.percent)
+                .justifyContent(FlexAlign.SpaceBetween)
             }, keyGeneratorFunc: { point: YearlyChartPoint, _: Int64 =>
                 point.id
             })
         }
-        .padding(12)
+        .padding(left: 16, right: 16, top: 16, bottom: 16)
+        .width(100.percent)
+        .borderRadius(24)
+        .backgroundColor(AppTheme.surfacePrimary())
     }
 }

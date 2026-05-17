@@ -6,6 +6,7 @@ import std.collection.ArrayList
 import ohos_app_cangjie_entry.data.local.PreferenceStore
 import ohos_app_cangjie_entry.data.model.Expense
 import ohos_app_cangjie_entry.utils.formatDay
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class ExpensesDayGroup {
@@ -17,7 +18,7 @@ public class ExpensesDayGroup {
     private let preferenceStore = PreferenceStore()
 
     private func totalLabel(): String {
-        "- ${this.preferenceStore.getCurrencySymbol()}${this.total}"
+        "- "
     }
 
     public func build(): Unit {
@@ -25,7 +26,7 @@ public class ExpensesDayGroup {
             Text(formatDay(this.title))
                 .fontSize(17)
                 .fontWeight(FontWeight.Medium)
-                .fontColor(0xFF1C1B1F)
+                .fontColor(AppTheme.textPrimary())
                 .padding(left: 4)
 
             ForEach(this.expenses, itemGeneratorFunc: { expense: Expense, _: Int64 =>
@@ -39,32 +40,32 @@ public class ExpensesDayGroup {
                     Text("T")
                         .fontSize(15)
                         .fontWeight(FontWeight.Medium)
-                        .fontColor(0xFF6750A4)
+                        .fontColor(AppTheme.brandPrimary())
                 }
                 .width(40)
                 .height(40)
                 .justifyContent(FlexAlign.Center)
                 .alignItems(VerticalAlign.Center)
                 .borderRadius(20)
-                .backgroundColor(0xFFE8DDFF)
+                .backgroundColor(AppTheme.surfaceAccentStrong())
 
                 Text("Total")
                     .fontSize(17)
                     .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF403457)
+                    .fontColor(AppTheme.textBrandStrong())
                     .width(52.percent)
 
                 Text(this.totalLabel())
                     .fontSize(17)
                     .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF403457)
+                    .fontColor(AppTheme.textBrandStrong())
             }
             .padding(left: 14, right: 14, top: 14, bottom: 14)
             .width(100.percent)
             .justifyContent(FlexAlign.SpaceBetween)
             .alignItems(VerticalAlign.Center)
             .borderRadius(24)
-            .backgroundColor(0xFFF1E7FF)
+            .backgroundColor(AppTheme.surfaceAccentSoft())
         }
         .width(100.percent)
     }

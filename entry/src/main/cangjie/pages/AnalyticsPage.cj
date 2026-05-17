@@ -4,6 +4,7 @@ import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.header.HeaderCard
 import ohos_app_cangjie_entry.components.charts.ChartsSection
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class AnalyticsPage {
@@ -20,6 +21,20 @@ public class AnalyticsPage {
         return 53
     }
 
+    private func modeButtonText(mode: String): UInt32 {
+        if (this.selectedMode == mode) {
+            return AppTheme.onBrandPrimary()
+        }
+        return AppTheme.brandPrimary()
+    }
+
+    private func modeButtonSurface(mode: String): UInt32 {
+        if (this.selectedMode == mode) {
+            return AppTheme.brandPrimary()
+        }
+        return AppTheme.surfaceInteractive()
+    }
+
     public func build(): Unit {
         Column(space: 16) {
             HeaderCard(title: "Analytics", iconName: "analytics", actionIconName: "info", subtitle: "Browse weekly, monthly, and yearly trends", dialogText: "Switch weekly, monthly, and yearly periods here and keep the analytics page read-only like the source app.", actionRoute: "")
@@ -27,8 +42,8 @@ public class AnalyticsPage {
             Row(space: 8) {
                 Button("Weekly")
                     .width(31.percent)
-                    .fontColor(if (this.selectedMode == "Weekly") { 0xFFFFFFFF } else { 0xFF6750A4 })
-                    .backgroundColor(if (this.selectedMode == "Weekly") { 0xFF6750A4 } else { 0xFFF2EAFD })
+                    .fontColor(this.modeButtonText("Weekly"))
+                    .backgroundColor(this.modeButtonSurface("Weekly"))
                     .borderRadius(999)
                     .onClick({ _ =>
                         this.selectedMode = "Weekly"
@@ -36,8 +51,8 @@ public class AnalyticsPage {
                     })
                 Button("Monthly")
                     .width(31.percent)
-                    .fontColor(if (this.selectedMode == "Monthly") { 0xFFFFFFFF } else { 0xFF6750A4 })
-                    .backgroundColor(if (this.selectedMode == "Monthly") { 0xFF6750A4 } else { 0xFFF2EAFD })
+                    .fontColor(this.modeButtonText("Monthly"))
+                    .backgroundColor(this.modeButtonSurface("Monthly"))
                     .borderRadius(999)
                     .onClick({ _ =>
                         this.selectedMode = "Monthly"
@@ -45,8 +60,8 @@ public class AnalyticsPage {
                     })
                 Button("Yearly")
                     .width(31.percent)
-                    .fontColor(if (this.selectedMode == "Yearly") { 0xFFFFFFFF } else { 0xFF6750A4 })
-                    .backgroundColor(if (this.selectedMode == "Yearly") { 0xFF6750A4 } else { 0xFFF2EAFD })
+                    .fontColor(this.modeButtonText("Yearly"))
+                    .backgroundColor(this.modeButtonSurface("Yearly"))
                     .borderRadius(999)
                     .onClick({ _ =>
                         this.selectedMode = "Yearly"
@@ -57,12 +72,13 @@ public class AnalyticsPage {
             .justifyContent(FlexAlign.SpaceBetween)
             .padding(left: 8, right: 8, top: 8, bottom: 8)
             .borderRadius(999)
-            .backgroundColor(0xFFF8F1FF)
+            .backgroundColor(AppTheme.surfaceSelected())
 
             Row(space: 10) {
                 Button("Previous")
                     .width(28.percent)
-                    .backgroundColor(0xFFF3EDF8)
+                    .backgroundColor(AppTheme.surfaceSecondary())
+                    .fontColor(AppTheme.textPrimary())
                     .borderRadius(20)
                     .enabled(this.selectedPage + 1 < this.pageLimit())
                     .onClick({ _ =>
@@ -74,16 +90,17 @@ public class AnalyticsPage {
                     Text(this.selectedMode)
                         .fontSize(15)
                         .fontWeight(FontWeight.Medium)
-                        .fontColor(0xFF1C1B1F)
-                    Text("Period ${this.selectedPage + 1} / ${this.pageLimit()}")
+                        .fontColor(AppTheme.textPrimary())
+                    Text("Period  / ")
                         .fontSize(12)
-                        .fontColor(0xFF7B7388)
+                        .fontColor(AppTheme.textSecondary())
                 }
                 .width(38.percent)
                 .alignItems(HorizontalAlign.Center)
                 Button("Next")
                     .width(28.percent)
-                    .backgroundColor(0xFFF3EDF8)
+                    .backgroundColor(AppTheme.surfaceSecondary())
+                    .fontColor(AppTheme.textPrimary())
                     .borderRadius(20)
                     .enabled(this.selectedPage > 0)
                     .onClick({ _ =>
@@ -97,7 +114,7 @@ public class AnalyticsPage {
             .justifyContent(FlexAlign.SpaceBetween)
             .alignItems(VerticalAlign.Center)
             .borderRadius(24)
-            .backgroundColor(0xFFFDF8FF)
+            .backgroundColor(AppTheme.surfacePrimary())
 
             ChartsSection(page: this.selectedPage, recurrenceName: this.selectedMode, title: this.selectedMode)
         }

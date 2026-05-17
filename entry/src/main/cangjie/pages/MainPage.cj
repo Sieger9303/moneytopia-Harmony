@@ -6,6 +6,7 @@ import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.header.AppIcon
 import ohos_app_cangjie_entry.components.navigation.BottomNavItem
 import ohos_app_cangjie_entry.runtime.RouteState
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class MainPage {
@@ -107,8 +108,8 @@ public class MainPage {
                                 .height(58)
                                 .fontSize(26)
                                 .fontWeight(FontWeight.Medium)
-                                .fontColor(0xFFFFFFFF)
-                                .backgroundColor(0xFF6750A4)
+                                .fontColor(AppTheme.onBrandPrimary())
+                                .backgroundColor(AppTheme.brandPrimary())
                                 .borderRadius(20)
                                 .onClick({ _ =>
                                     RouteState.navigate("expenses/add_expenses")
@@ -123,26 +124,26 @@ public class MainPage {
                 }
                 .width(100.percent)
                 .height(88.percent)
-                .backgroundColor(0xFFF6F1FA)
+                .backgroundColor(AppTheme.appBackground())
 
                 Column() {
                     Row(space: 8) {
                         ForEach(this.navItems(), itemGeneratorFunc: { item: BottomNavItem, _: Int64 =>
                             Column(space: 6) {
                                 Row() {
-                                    AppIcon(name: item.iconName, size: 15, color: if (this.isTabSelected(item.route)) { 0xFFFFFFFF } else { 0xFF7B7388 })
+                                    AppIcon(name: item.iconName, size: 15, color: if (this.isTabSelected(item.route)) { Int64(AppTheme.onBrandPrimary()) } else { Int64(AppTheme.textSecondary()) })
                                 }
                                 .width(40)
                                 .height(40)
                                 .justifyContent(FlexAlign.Center)
                                 .alignItems(VerticalAlign.Center)
                                 .borderRadius(20)
-                                .backgroundColor(if (this.isTabSelected(item.route)) { 0xFF6750A4 } else { 0xFFF3EDF8 })
+                                .backgroundColor(if (this.isTabSelected(item.route)) { AppTheme.brandPrimary() } else { AppTheme.surfaceSecondary() })
 
                                 Text(item.title)
                                     .fontSize(12)
                                     .fontWeight(if (this.isTabSelected(item.route)) { FontWeight.Medium } else { FontWeight.Regular })
-                                    .fontColor(if (this.isTabSelected(item.route)) { 0xFF1C1B1F } else { 0xFF7B7388 })
+                                    .fontColor(if (this.isTabSelected(item.route)) { AppTheme.textPrimary() } else { AppTheme.textSecondary() })
                             }
                             .width(23.percent)
                             .alignItems(HorizontalAlign.Center)
@@ -161,7 +162,7 @@ public class MainPage {
                 .width(100.percent)
                 .padding(left: 14, right: 14, top: 10, bottom: 12)
                 .borderRadius(30)
-                .backgroundColor(0xFFFDF8FF)
+                .backgroundColor(AppTheme.surfacePrimary())
                 .margin(left: 16, right: 16, top: 4, bottom: 16)
             } else {
                 Scroll() {
@@ -205,6 +206,6 @@ public class MainPage {
         }
         .width(100.percent)
         .height(100.percent)
-        .backgroundColor(0xFFF6F1FA)
+        .backgroundColor(AppTheme.appBackground())
     }
 }

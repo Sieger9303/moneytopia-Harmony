@@ -3,6 +3,7 @@ package ohos_app_cangjie_entry.components.expenses
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.state.getYearlyDates
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class ExpensesByAllSection {
@@ -11,7 +12,7 @@ public class ExpensesByAllSection {
             Text("All Transactions")
                 .fontSize(18)
                 .fontWeight(FontWeight.Medium)
-                .fontColor(0xFF1C1B1F)
+                .fontColor(AppTheme.textPrimary())
                 .padding(left: 4)
             ExpenseDateGroupList(
                 dates: getYearlyDates(),

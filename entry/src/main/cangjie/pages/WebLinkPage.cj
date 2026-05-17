@@ -4,6 +4,7 @@ import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos.web.webview.*
 import ohos_app_cangjie_entry.runtime.RouteState
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class WebLinkPage {
@@ -14,9 +15,10 @@ public class WebLinkPage {
             Text(RouteState.currentLinkTitle)
                 .fontSize(20)
                 .fontWeight(FontWeight.Medium)
-                .fontColor(0xFF1C1B1F)
+                .fontColor(AppTheme.textPrimary())
             Button("Back")
-                .backgroundColor(0xFFF3EDF8)
+                .backgroundColor(AppTheme.surfaceSecondary())
+                .fontColor(AppTheme.textPrimary())
                 .borderRadius(20)
                 .onClick({ _ =>
                     RouteState.navigate("settings/about")
@@ -28,5 +30,6 @@ public class WebLinkPage {
         .padding(16)
         .width(100.percent)
         .height(100.percent)
+        .backgroundColor(AppTheme.appBackground())
     }
 }

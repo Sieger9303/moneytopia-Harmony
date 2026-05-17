@@ -4,6 +4,7 @@ import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.runtime.RouteState
 import ohos_app_cangjie_entry.state.getDailyDates
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class ExpensesByDaySection {
@@ -13,13 +14,13 @@ public class ExpensesByDaySection {
                 Text("Recent Transactions")
                     .fontSize(19)
                     .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF1C1B1F)
+                    .fontColor(AppTheme.textPrimary())
                     .width(58.percent)
                 Button("See All")
                     .fontSize(12)
                     .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF6750A4)
-                    .backgroundColor(0xFFF1EAFE)
+                    .fontColor(AppTheme.brandPrimary())
+                    .backgroundColor(AppTheme.surfaceInteractive())
                     .borderRadius(999)
                     .padding(left: 10, right: 10)
                     .onClick({ _ =>

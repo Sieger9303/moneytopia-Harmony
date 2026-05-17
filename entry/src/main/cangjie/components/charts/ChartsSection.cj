@@ -10,6 +10,7 @@ import ohos_app_cangjie_entry.data.model.toRecurrence
 import ohos_app_cangjie_entry.state.getChartsSnapshot
 import ohos_app_cangjie_entry.utils.calculateDateRange
 import ohos_app_cangjie_entry.utils.formatDayForRange
+import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
 public class ChartsSection {
@@ -27,12 +28,12 @@ public class ChartsSection {
 
     private func dateRangeLabel(): String {
         let snapshot = this.snapshot()
-        "${formatDayForRange(snapshot.dateStart)} - ${formatDayForRange(snapshot.dateEnd)}"
+        " - "
     }
 
     private func totalLabel(): String {
         let snapshot = this.snapshot()
-        "${snapshot.currencySymbol}${snapshot.totalInRange}"
+        ""
     }
 
     private func periodExpenses(): ArrayList<Expense> {
@@ -53,19 +54,19 @@ public class ChartsSection {
                 Text(this.title)
                     .fontSize(20)
                     .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF1C1B1F)
+                    .fontColor(AppTheme.textPrimary())
                 Text(this.dateRangeLabel())
                     .fontSize(12)
-                    .fontColor(0xFF7B7388)
+                    .fontColor(AppTheme.textSecondary())
                 Text(this.totalLabel())
                     .fontSize(24)
                     .fontWeight(FontWeight.Medium)
-                    .fontColor(0xFF1C1B1F)
+                    .fontColor(AppTheme.textPrimary())
             }
             .padding(left: 18, right: 18, top: 18, bottom: 18)
             .width(100.percent)
             .borderRadius(24)
-            .backgroundColor(0xFFFDF8FF)
+            .backgroundColor(AppTheme.surfacePrimary())
 
             ChartMarker(label: "Period breakdown")
             if (this.recurrenceName == "Weekly") {
