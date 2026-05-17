@@ -18,7 +18,8 @@ public class ExpensesDayGroup {
     private let preferenceStore = PreferenceStore()
 
     private func totalLabel(): String {
-        "- "
+        let symbol = this.preferenceStore.getCurrencySymbol()
+        return "- ${symbol}${this.total}"
     }
 
     public func build(): Unit {

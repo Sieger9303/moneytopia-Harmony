@@ -25,14 +25,15 @@ public class ExpenseRow {
     }
 
     private func amountLabel(): String {
-        "- "
+        let symbol = this.preferenceStore.getCurrencySymbol()
+        return "- ${symbol}${this.expense.amount}"
     }
 
     private func noteLabel(): String {
         if (this.expense.note != "") {
             return this.expense.note
         }
-        return "No note added"
+        return ""
     }
 
     private func categoryIconName(): String {
@@ -62,9 +63,11 @@ public class ExpenseRow {
                         .fontSize(16)
                         .fontWeight(FontWeight.Medium)
                         .fontColor(AppTheme.textPrimary())
-                    Text(this.noteLabel())
-                        .fontSize(12)
-                        .fontColor(AppTheme.textSecondary())
+                    if (this.noteLabel() != "") {
+                        Text(this.noteLabel())
+                            .fontSize(12)
+                            .fontColor(AppTheme.textSecondary())
+                    }
                 }
                 .width(50.percent)
                 .alignItems(HorizontalAlign.Start)
@@ -83,26 +86,13 @@ public class ExpenseRow {
             .width(100.percent)
             .justifyContent(FlexAlign.SpaceBetween)
             .alignItems(VerticalAlign.Center)
-
-            if (this.allowDelete && !this.showDeletePrompt) {
-                Row(space: 6) {
-                    AppIcon(name: "delete", size: 14, color: Int64(AppTheme.dangerPrimary()))
-                    Text("Delete")
-                        .fontSize(12)
-                        .fontColor(AppTheme.dangerPrimary())
+            .onClick({ _ =>
+                if (this.allowDelete) {
+                    this.showDeletePrompt = !this.showDeletePrompt
                 }
-                .padding(left: 12, right: 12, top: 8, bottom: 8)
-                .justifyContent(FlexAlign.Center)
-                .alignItems(VerticalAlign.Center)
-                .borderRadius(16)
-                .backgroundColor(AppTheme.surfaceDangerSoft())
-                .onClick({ _ =>
-                    this.showDeletePrompt = true
-                })
-                .width(100.percent)
-            }
+            })
 
-            if (this.showDeletePrompt) {
+            if (this.allowDelete && this.showDeletePrompt) {
                 Column(space: 8) {
                     Text("Delete transaction?")
                         .fontSize(12)

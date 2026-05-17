@@ -2,9 +2,7 @@ package ohos_app_cangjie_entry.components.charts
 
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
-import std.collection.ArrayList
 import ohos_app_cangjie_entry.components.expenses.ExpensesByPeriodSection
-import ohos_app_cangjie_entry.data.model.Expense
 import ohos_app_cangjie_entry.data.model.Recurrence
 import ohos_app_cangjie_entry.data.model.toRecurrence
 import ohos_app_cangjie_entry.state.getChartsSnapshot
@@ -22,22 +20,14 @@ public class ChartsSection {
         toRecurrence(this.recurrenceName)
     }
 
-    private func snapshot() {
-        getChartsSnapshot(this.page, this.recurrence())
-    }
-
     private func dateRangeLabel(): String {
-        let snapshot = this.snapshot()
-        " - "
+        let data = getChartsSnapshot(this.page, this.recurrence())
+        formatDayForRange(data.dateStart) + " - " + formatDayForRange(data.dateEnd)
     }
 
     private func totalLabel(): String {
-        let snapshot = this.snapshot()
-        ""
-    }
-
-    private func periodExpenses(): ArrayList<Expense> {
-        this.snapshot().expenses
+        let data = getChartsSnapshot(this.page, this.recurrence())
+        data.currencySymbol + data.totalInRange.toString()
     }
 
     private func rangeStart(): String {
@@ -51,13 +41,10 @@ public class ChartsSection {
     public func build(): Unit {
         Column(space: 14) {
             Column(space: 4) {
-                Text(this.title)
-                    .fontSize(20)
+                Text(this.dateRangeLabel())
+                    .fontSize(16)
                     .fontWeight(FontWeight.Medium)
                     .fontColor(AppTheme.textPrimary())
-                Text(this.dateRangeLabel())
-                    .fontSize(12)
-                    .fontColor(AppTheme.textSecondary())
                 Text(this.totalLabel())
                     .fontSize(24)
                     .fontWeight(FontWeight.Medium)
@@ -68,17 +55,18 @@ public class ChartsSection {
             .borderRadius(24)
             .backgroundColor(AppTheme.surfacePrimary())
 
-            ChartMarker(label: "Period breakdown")
+            ChartMarker(label: "Tap the mode above to switch periods")
             if (this.recurrenceName == "Weekly") {
-                WeeklyChart(expenses: this.periodExpenses())
+                WeeklyChart(expenses: getChartsSnapshot(this.page, this.recurrence()).expenses)
             }
             if (this.recurrenceName == "Monthly") {
-                MonthlyChart(expenses: this.periodExpenses(), rangeStart: this.rangeStart(), daysInRange: this.rangeDays())
+                MonthlyChart(expenses: getChartsSnapshot(this.page, this.recurrence()).expenses, rangeStart: this.rangeStart(), daysInRange: this.rangeDays())
             }
             if (this.recurrenceName == "Yearly") {
-                YearlyChart(expenses: this.periodExpenses())
+                YearlyChart(expenses: getChartsSnapshot(this.page, this.recurrence()).expenses)
             }
-            ExpensesByPeriodSection(title: "Transactions", expenses: this.periodExpenses())
+            ExpensesByPeriodSection(title: "Transactions", expenses: getChartsSnapshot(this.page, this.recurrence()).expenses)
         }
+        .width(100.percent)
     }
 }

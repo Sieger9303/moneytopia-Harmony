@@ -55,18 +55,25 @@ public class WeeklyChart {
                 .fontWeight(FontWeight.Medium)
                 .fontColor(AppTheme.textPrimary())
             ForEach(this.points(), itemGeneratorFunc: { point: WeeklyChartPoint, _: Int64 =>
-                Row(space: 12) {
-                    Text(point.label)
-                        .fontSize(13)
-                        .fontColor(AppTheme.textSecondary())
-                        .width(52.percent)
-                    Text(point.total.toString())
-                        .fontSize(14)
-                        .fontWeight(FontWeight.Medium)
-                        .fontColor(AppTheme.brandPrimary())
+                Column(space: 4) {
+                    Row(space: 8) {
+                        Text(point.label)
+                            .fontSize(13)
+                            .fontColor(AppTheme.textSecondary())
+                        Text(point.total.toString())
+                            .fontSize(13)
+                            .fontWeight(FontWeight.Medium)
+                            .fontColor(AppTheme.textPrimary())
+                    }
+                    .width(100.percent)
+                    .justifyContent(FlexAlign.SpaceBetween)
+                    Row() {}
+                        .width(100.percent)
+                        .height(8)
+                        .borderRadius(999)
+                        .backgroundColor(AppTheme.brandPrimary())
                 }
                 .width(100.percent)
-                .justifyContent(FlexAlign.SpaceBetween)
             }, keyGeneratorFunc: { point: WeeklyChartPoint, _: Int64 =>
                 point.id
             })

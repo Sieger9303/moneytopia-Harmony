@@ -38,6 +38,11 @@ public class MonthlyChart {
         total
     }
 
+    private func monthLabel(): String {
+        let startDate = DateTime.parse("${this.rangeStart} 00:00:00", "yyyy-MM-dd HH:mm:ss")
+        return startDate.format("MMMM yyyy")
+    }
+
     private func points(): ArrayList<MonthlyChartPoint> {
         let items = ArrayList<MonthlyChartPoint>()
         for (day in 1..this.daysInRange) {
@@ -52,22 +57,29 @@ public class MonthlyChart {
                 .fontSize(16)
                 .fontWeight(FontWeight.Medium)
                 .fontColor(AppTheme.textPrimary())
-            Text(DateTime.parse(" 00:00:00", "yyyy-MM-dd HH:mm:ss").format("MMMM yyyy"))
+            Text(this.monthLabel())
                 .fontSize(12)
                 .fontColor(AppTheme.textSecondary())
             ForEach(this.points(), itemGeneratorFunc: { point: MonthlyChartPoint, _: Int64 =>
-                Row(space: 12) {
-                    Text(point.label)
-                        .fontSize(13)
-                        .fontColor(AppTheme.textSecondary())
-                        .width(52.percent)
-                    Text(point.total.toString())
-                        .fontSize(14)
-                        .fontWeight(FontWeight.Medium)
-                        .fontColor(AppTheme.brandPrimary())
+                Column(space: 4) {
+                    Row(space: 8) {
+                        Text(point.label)
+                            .fontSize(12)
+                            .fontColor(AppTheme.textSecondary())
+                        Text(point.total.toString())
+                            .fontSize(13)
+                            .fontWeight(FontWeight.Medium)
+                            .fontColor(AppTheme.textPrimary())
+                    }
+                    .width(100.percent)
+                    .justifyContent(FlexAlign.SpaceBetween)
+                    Row() {}
+                        .width(100.percent)
+                        .height(8)
+                        .borderRadius(999)
+                        .backgroundColor(AppTheme.brandPrimary())
                 }
                 .width(100.percent)
-                .justifyContent(FlexAlign.SpaceBetween)
             }, keyGeneratorFunc: { point: MonthlyChartPoint, _: Int64 =>
                 point.id
             })

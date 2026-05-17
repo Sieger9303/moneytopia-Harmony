@@ -2,12 +2,12 @@ package ohos_app_cangjie_entry.pages
 
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
+import std.collection.ArrayList
 import ohos_app_cangjie_entry.components.about.Contributor
 import ohos_app_cangjie_entry.components.about.SocialMediaLink
 import ohos_app_cangjie_entry.components.header.AppIcon
-import ohos_app_cangjie_entry.components.header.HeaderCard
+import ohos_app_cangjie_entry.runtime.RouteState
 import ohos_app_cangjie_entry.theme.AppTheme
-import std.collection.ArrayList
 
 @Component
 public class AboutPage {
@@ -22,14 +22,32 @@ public class AboutPage {
 
     public func build(): Unit {
         Column(space: 16) {
-            HeaderCard(
-                title: "About",
-                iconName: "info",
-                actionIconName: "info",
-                subtitle: "App details, links, and contributors",
-                actionRoute: "settings",
-                dialogText: "Open the author links below to view the in-app web page. Use the bottom navigation or the Back button on the web page to return."
-            )
+            Row(space: 12) {
+                Button("Back")
+                    .backgroundColor(AppTheme.surfaceSecondary())
+                    .fontColor(AppTheme.textPrimary())
+                    .borderRadius(18)
+                    .onClick({ _ =>
+                        RouteState.navigate("settings")
+                    })
+
+                Column(space: 2) {
+                    Text("About")
+                        .fontSize(21)
+                        .fontWeight(FontWeight.Medium)
+                        .fontColor(AppTheme.textPrimary())
+                    Text("App details, links, and contributors")
+                        .fontSize(12)
+                        .fontColor(AppTheme.textSecondary())
+                }
+                .width(66.percent)
+                .alignItems(HorizontalAlign.Start)
+            }
+            .padding(left: 18, right: 18, top: 15, bottom: 15)
+            .width(100.percent)
+            .alignItems(VerticalAlign.Center)
+            .borderRadius(999)
+            .backgroundColor(AppTheme.surfacePrimary())
 
             Column(space: 8) {
                 Row() {
@@ -57,6 +75,7 @@ public class AboutPage {
             Text("Social links")
                 .fontSize(18)
                 .fontColor(AppTheme.textPrimary())
+                .width(100.percent)
             SocialMediaLink(title: "GitHub", url: "https://github.com/dimrnhhh")
             SocialMediaLink(title: "Behance", url: "https://www.behance.net/dimrnhhh")
             SocialMediaLink(title: "LinkedIn", url: "https://www.linkedin.com/in/dimrnhhh/")
@@ -65,6 +84,7 @@ public class AboutPage {
             Text("Contributors")
                 .fontSize(18)
                 .fontColor(AppTheme.textPrimary())
+                .width(100.percent)
             ForEach(this.contributors(), itemGeneratorFunc: { contributor: Contributor, _: Int64 =>
                 Column(space: 3) {
                     Text(contributor.name)
