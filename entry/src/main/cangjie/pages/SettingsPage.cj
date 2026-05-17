@@ -188,7 +188,7 @@ public class SettingsPage {
             }
 
             if (this.showCurrencyDialog) {
-                CurrencyDialog(currentSymbol: this.preferenceStore.getCurrencySymbol())
+                CurrencyDialog(currentSymbol: this.currencyDraft)
                 TextInput(placeholder: "$", text: this.currencyDraft)
                     .backgroundColor(0xFFFDF8FF)
                     .borderRadius(20)

@@ -9,6 +9,9 @@ import ohos_app_cangjie_entry.runtime.RouteState
 
 @Component
 public class MainPage {
+    @State var currentRoute: String = RouteState.currentRoute
+    @State var routeVersion: Int64 = 0
+
     private func navItems(): ArrayList<BottomNavItem> {
         let items = ArrayList<BottomNavItem>()
         items.add(BottomNavItem("Expenses", "wallet", "expenses"))
@@ -18,29 +21,41 @@ public class MainPage {
         items
     }
 
+    private func syncRoute(): Unit {
+        this.currentRoute = RouteState.currentRoute
+        this.routeVersion += 1
+    }
+
     private func isTabSelected(route: String): Bool {
         if (route == "expenses") {
-            return RouteState.currentRoute == "expenses" || RouteState.currentRoute == "expenses/add_expenses"
+            return this.currentRoute == "expenses" || this.currentRoute == "expenses/add_expenses"
         }
-        if (route == "settings") {
-            return RouteState.currentRoute == "settings" || RouteState.currentRoute == "settings/languages" || RouteState.currentRoute == "settings/about" || RouteState.currentRoute == "settings/about/web" || RouteState.currentRoute == "settings/categories"
-        }
-        return RouteState.currentRoute == route
+        return this.currentRoute == route
     }
 
     private func showBottomBar(): Bool {
-        return RouteState.currentRoute != "settings/about/web"
+        return this.currentRoute == "expenses" || this.currentRoute == "reports" || this.currentRoute == "analytics" || this.currentRoute == "settings"
     }
 
     private func showFloatingAdd(): Bool {
-        return RouteState.currentRoute == "expenses"
+        return this.currentRoute == "expenses"
     }
 
     private func contentBottomPadding(): Int64 {
-        if (this.showFloatingAdd()) {
-            return 104
+        if (this.showBottomBar()) {
+            if (this.showFloatingAdd()) {
+                return 104
+            }
+            return 24
         }
         return 24
+    }
+
+    public func aboutToAppear(): Unit {
+        RouteState.setChangeHandler({ =>
+            this.syncRoute()
+        })
+        this.syncRoute()
     }
 
     public func build(): Unit {
@@ -49,31 +64,31 @@ public class MainPage {
                 Stack() {
                     Scroll() {
                         Column() {
-                            if (RouteState.currentRoute == "expenses") {
+                            if (this.currentRoute == "expenses") {
                                 ExpensesPage()
                             }
-                            if (RouteState.currentRoute == "expenses/add_expenses") {
+                            if (this.currentRoute == "expenses/add_expenses") {
                                 AddExpensePage()
                             }
-                            if (RouteState.currentRoute == "reports") {
+                            if (this.currentRoute == "reports") {
                                 ReportsPage()
                             }
-                            if (RouteState.currentRoute == "analytics") {
+                            if (this.currentRoute == "analytics") {
                                 AnalyticsPage()
                             }
-                            if (RouteState.currentRoute == "settings") {
+                            if (this.currentRoute == "settings") {
                                 SettingsPage()
                             }
-                            if (RouteState.currentRoute == "settings/languages") {
+                            if (this.currentRoute == "settings/languages") {
                                 LanguagesPage()
                             }
-                            if (RouteState.currentRoute == "settings/about") {
+                            if (this.currentRoute == "settings/about") {
                                 AboutPage()
                             }
-                            if (RouteState.currentRoute == "settings/about/web") {
+                            if (this.currentRoute == "settings/about/web") {
                                 WebLinkPage()
                             }
-                            if (RouteState.currentRoute == "settings/categories") {
+                            if (this.currentRoute == "settings/categories") {
                                 CategoryPage()
                             }
                         }
@@ -151,31 +166,31 @@ public class MainPage {
             } else {
                 Scroll() {
                     Column() {
-                        if (RouteState.currentRoute == "expenses") {
+                        if (this.currentRoute == "expenses") {
                             ExpensesPage()
                         }
-                        if (RouteState.currentRoute == "expenses/add_expenses") {
+                        if (this.currentRoute == "expenses/add_expenses") {
                             AddExpensePage()
                         }
-                        if (RouteState.currentRoute == "reports") {
+                        if (this.currentRoute == "reports") {
                             ReportsPage()
                         }
-                        if (RouteState.currentRoute == "analytics") {
+                        if (this.currentRoute == "analytics") {
                             AnalyticsPage()
                         }
-                        if (RouteState.currentRoute == "settings") {
+                        if (this.currentRoute == "settings") {
                             SettingsPage()
                         }
-                        if (RouteState.currentRoute == "settings/languages") {
+                        if (this.currentRoute == "settings/languages") {
                             LanguagesPage()
                         }
-                        if (RouteState.currentRoute == "settings/about") {
+                        if (this.currentRoute == "settings/about") {
                             AboutPage()
                         }
-                        if (RouteState.currentRoute == "settings/about/web") {
+                        if (this.currentRoute == "settings/about/web") {
                             WebLinkPage()
                         }
-                        if (RouteState.currentRoute == "settings/categories") {
+                        if (this.currentRoute == "settings/categories") {
                             CategoryPage()
                         }
                     }

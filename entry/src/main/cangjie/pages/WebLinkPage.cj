@@ -13,16 +13,14 @@ public class WebLinkPage {
         Column(space: 12) {
             Text(RouteState.currentLinkTitle)
                 .fontSize(20)
-            Row(space: 8) {
-                Button("Reload")
-                    .onClick({ _ =>
-                        this.webController.reload()
-                    })
-                Button("Back")
-                    .onClick({ _ =>
-                        RouteState.navigate("settings/about")
-                    })
-            }
+                .fontWeight(FontWeight.Medium)
+                .fontColor(0xFF1C1B1F)
+            Button("Back")
+                .backgroundColor(0xFFF3EDF8)
+                .borderRadius(20)
+                .onClick({ _ =>
+                    RouteState.navigate("settings/about")
+                })
             Web(src: RouteState.currentLinkUrl, controller: this.webController)
                 .width(100.percent)
                 .height(85.percent)
