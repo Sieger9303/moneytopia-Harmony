@@ -78,9 +78,6 @@ public class WeeklyChart {
 
     public func build(): Unit {
         Column() {
-            Text("DEBUG ${this.pointTotalsKey()}")
-            .fontSize(9)
-            .fontColor(Color.Red)
             ForEach(this.chartInstanceKeys(), itemGeneratorFunc: { key: String, _: Int64 =>
                 LineChartCard(
                     title: "",

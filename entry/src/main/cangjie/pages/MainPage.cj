@@ -83,7 +83,8 @@ public class MainPage {
     public func build(): Unit {
         Column() {
             if (this.showBottomBar()) {
-                Stack() {
+
+                Stack(alignContent: Alignment.BottomEnd) {
                     Column() {
                         this.activePage()
                     }
@@ -99,7 +100,6 @@ public class MainPage {
                             .fontColor(AppTheme.onBrandPrimary())
                             .backgroundColor(AppTheme.brandPrimary())
                             .borderRadius(20)
-                            .align(Alignment.BottomEnd)
                             .margin(right: 24, bottom: 24)
                             .onClick({ _ =>
                                 RouteState.navigate("expenses/add_expenses")
