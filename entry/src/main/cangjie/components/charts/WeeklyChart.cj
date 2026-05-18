@@ -5,22 +5,6 @@ import std.time.*
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.data.model.Expense
-import ohos_app_cangjie_entry.theme.AppTheme
-import ohos_app_cangjie_entry.utils.formatCompactAmount
-
-public class WeeklyChartPoint {
-    public var id: String = ""
-    public var label: String = ""
-    public var total: Float64 = 0.0
-
-    public init() {}
-
-    public init(id!: String, label!: String, total!: Float64) {
-        this.id = id
-        this.label = label
-        this.total = total
-    }
-}
 
 @Component
 public class WeeklyChart {
@@ -37,62 +21,25 @@ public class WeeklyChart {
         total
     }
 
-    private func points(): ArrayList<WeeklyChartPoint> {
-        let items = ArrayList<WeeklyChartPoint>()
-        items.add(WeeklyChartPoint(id: "mon", label: "Monday", total: this.totalFor("Monday")))
-        items.add(WeeklyChartPoint(id: "tue", label: "Tuesday", total: this.totalFor("Tuesday")))
-        items.add(WeeklyChartPoint(id: "wed", label: "Wednesday", total: this.totalFor("Wednesday")))
-        items.add(WeeklyChartPoint(id: "thu", label: "Thursday", total: this.totalFor("Thursday")))
-        items.add(WeeklyChartPoint(id: "fri", label: "Friday", total: this.totalFor("Friday")))
-        items.add(WeeklyChartPoint(id: "sat", label: "Saturday", total: this.totalFor("Saturday")))
-        items.add(WeeklyChartPoint(id: "sun", label: "Sunday", total: this.totalFor("Sunday")))
+    private func points(): ArrayList<LineChartPoint> {
+        let items = ArrayList<LineChartPoint>()
+        items.add(LineChartPoint(id: "mon", label: "Mon", total: this.totalFor("Monday")))
+        items.add(LineChartPoint(id: "tue", label: "Tue", total: this.totalFor("Tuesday")))
+        items.add(LineChartPoint(id: "wed", label: "Wed", total: this.totalFor("Wednesday")))
+        items.add(LineChartPoint(id: "thu", label: "Thu", total: this.totalFor("Thursday")))
+        items.add(LineChartPoint(id: "fri", label: "Fri", total: this.totalFor("Friday")))
+        items.add(LineChartPoint(id: "sat", label: "Sat", total: this.totalFor("Saturday")))
+        items.add(LineChartPoint(id: "sun", label: "Sun", total: this.totalFor("Sunday")))
         items
     }
 
     public func build(): Unit {
-        Column(space: 10) {
-            Text("Weekly spending")
-                .fontSize(16)
-                .fontWeight(FontWeight.Medium)
-                .fontColor(AppTheme.textPrimary())
-
-            Column(space: 8) {
-                ForEach(this.points(), itemGeneratorFunc: { point: WeeklyChartPoint, _: Int64 =>
-                    Column(space: 4) {
-                        Row(space: 8) {
-                            Text(point.label)
-                                .fontSize(13)
-                                .fontColor(AppTheme.textSecondary())
-                            Text(formatCompactAmount(point.total))
-                                .fontSize(13)
-                                .fontWeight(FontWeight.Medium)
-                                .fontColor(AppTheme.textPrimary())
-                        }
-                        .width(100.percent)
-                        .justifyContent(FlexAlign.SpaceBetween)
-
-                        Row() {
-                            Row() {}
-                                .width(if (point.total <= 0.0) { 8 } else { 72 })
-                                .height(8)
-                                .borderRadius(999)
-                                .backgroundColor(AppTheme.brandPrimary())
-                        }
-                        .width(100.percent)
-                        .padding(left: 4, right: 4)
-                        .alignItems(VerticalAlign.Center)
-                    }
-                    .width(100.percent)
-                }, keyGeneratorFunc: { point: WeeklyChartPoint, _: Int64 => point.id })
-            }
-            .padding(left: 10, right: 10, top: 12, bottom: 12)
-            .width(100.percent)
-            .borderRadius(20)
-            .backgroundColor(AppTheme.surfaceElevated())
+        Column() {
+            LineChartCard(
+                title: "",
+                subtitle: "",
+                points: this.points()
+            )
         }
-        .padding(left: 16, right: 16, top: 16, bottom: 16)
-        .width(100.percent)
-        .borderRadius(24)
-        .backgroundColor(AppTheme.surfacePrimary())
     }
 }

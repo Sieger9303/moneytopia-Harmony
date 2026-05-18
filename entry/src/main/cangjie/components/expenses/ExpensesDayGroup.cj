@@ -29,7 +29,6 @@ public class ExpensesDayGroup {
                 .fontSize(17)
                 .fontWeight(FontWeight.Medium)
                 .fontColor(AppTheme.textPrimary())
-                .padding(left: 4)
 
             ForEach(this.expenses, itemGeneratorFunc: { expense: Expense, _: Int64 =>
                 ExpenseRow(expense: expense, allowDelete: this.allowDelete)

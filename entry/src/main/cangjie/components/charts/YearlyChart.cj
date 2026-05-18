@@ -5,22 +5,6 @@ import std.time.*
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.data.model.Expense
-import ohos_app_cangjie_entry.theme.AppTheme
-import ohos_app_cangjie_entry.utils.formatCompactAmount
-
-public class YearlyChartPoint {
-    public var id: String = ""
-    public var label: String = ""
-    public var total: Float64 = 0.0
-
-    public init() {}
-
-    public init(id!: String, label!: String, total!: Float64) {
-        this.id = id
-        this.label = label
-        this.total = total
-    }
-}
 
 @Component
 public class YearlyChart {
@@ -37,67 +21,30 @@ public class YearlyChart {
         total
     }
 
-    private func points(): ArrayList<YearlyChartPoint> {
-        let items = ArrayList<YearlyChartPoint>()
-        items.add(YearlyChartPoint(id: "jan", label: "January", total: this.totalFor("January")))
-        items.add(YearlyChartPoint(id: "feb", label: "February", total: this.totalFor("February")))
-        items.add(YearlyChartPoint(id: "mar", label: "March", total: this.totalFor("March")))
-        items.add(YearlyChartPoint(id: "apr", label: "April", total: this.totalFor("April")))
-        items.add(YearlyChartPoint(id: "may", label: "May", total: this.totalFor("May")))
-        items.add(YearlyChartPoint(id: "jun", label: "June", total: this.totalFor("June")))
-        items.add(YearlyChartPoint(id: "jul", label: "July", total: this.totalFor("July")))
-        items.add(YearlyChartPoint(id: "aug", label: "August", total: this.totalFor("August")))
-        items.add(YearlyChartPoint(id: "sep", label: "September", total: this.totalFor("September")))
-        items.add(YearlyChartPoint(id: "oct", label: "October", total: this.totalFor("October")))
-        items.add(YearlyChartPoint(id: "nov", label: "November", total: this.totalFor("November")))
-        items.add(YearlyChartPoint(id: "dec", label: "December", total: this.totalFor("December")))
+    private func points(): ArrayList<LineChartPoint> {
+        let items = ArrayList<LineChartPoint>()
+        items.add(LineChartPoint(id: "jan", label: "Jan", total: this.totalFor("January")))
+        items.add(LineChartPoint(id: "feb", label: "Feb", total: this.totalFor("February")))
+        items.add(LineChartPoint(id: "mar", label: "Mar", total: this.totalFor("March")))
+        items.add(LineChartPoint(id: "apr", label: "Apr", total: this.totalFor("April")))
+        items.add(LineChartPoint(id: "may", label: "May", total: this.totalFor("May")))
+        items.add(LineChartPoint(id: "jun", label: "Jun", total: this.totalFor("June")))
+        items.add(LineChartPoint(id: "jul", label: "Jul", total: this.totalFor("July")))
+        items.add(LineChartPoint(id: "aug", label: "Aug", total: this.totalFor("August")))
+        items.add(LineChartPoint(id: "sep", label: "Sep", total: this.totalFor("September")))
+        items.add(LineChartPoint(id: "oct", label: "Oct", total: this.totalFor("October")))
+        items.add(LineChartPoint(id: "nov", label: "Nov", total: this.totalFor("November")))
+        items.add(LineChartPoint(id: "dec", label: "Dec", total: this.totalFor("December")))
         items
     }
 
     public func build(): Unit {
-        Column(space: 10) {
-            Text("Yearly spending")
-                .fontSize(16)
-                .fontWeight(FontWeight.Medium)
-                .fontColor(AppTheme.textPrimary())
-
-            Column(space: 8) {
-                ForEach(this.points(), itemGeneratorFunc: { point: YearlyChartPoint, _: Int64 =>
-                    Column(space: 4) {
-                        Row(space: 8) {
-                            Text(point.label)
-                                .fontSize(12)
-                                .fontColor(AppTheme.textSecondary())
-                            Text(formatCompactAmount(point.total))
-                                .fontSize(13)
-                                .fontWeight(FontWeight.Medium)
-                                .fontColor(AppTheme.textPrimary())
-                        }
-                        .width(100.percent)
-                        .justifyContent(FlexAlign.SpaceBetween)
-
-                        Row() {
-                            Row() {}
-                                .width(if (point.total <= 0.0) { 8 } else { 72 })
-                                .height(8)
-                                .borderRadius(999)
-                                .backgroundColor(AppTheme.brandPrimary())
-                        }
-                        .width(100.percent)
-                        .padding(left: 4, right: 4)
-                        .alignItems(VerticalAlign.Center)
-                    }
-                    .width(100.percent)
-                }, keyGeneratorFunc: { point: YearlyChartPoint, _: Int64 => point.id })
-            }
-            .padding(left: 10, right: 10, top: 12, bottom: 12)
-            .width(100.percent)
-            .borderRadius(20)
-            .backgroundColor(AppTheme.surfaceElevated())
+        Column() {
+            LineChartCard(
+                title: "",
+                subtitle: "",
+                points: this.points()
+            )
         }
-        .padding(left: 16, right: 16, top: 16, bottom: 16)
-        .width(100.percent)
-        .borderRadius(24)
-        .backgroundColor(AppTheme.surfacePrimary())
     }
 }

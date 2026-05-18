@@ -1,8 +1,10 @@
 package ohos_app_cangjie_entry.components.charts
 
+import std.collection.ArrayList
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.expenses.ExpensesByPeriodSection
+import ohos_app_cangjie_entry.data.model.Expense
 import ohos_app_cangjie_entry.data.model.Recurrence
 import ohos_app_cangjie_entry.data.model.toRecurrence
 import ohos_app_cangjie_entry.state.ChartsState
@@ -35,6 +37,14 @@ public class ChartsSection {
         return formatMoney(data.totalInRange, data.currencySymbol)
     }
 
+    private func periodExpenses(): ArrayList<Expense> {
+        this.data().expenses
+    }
+
+    private func rangeStartValue(): String {
+        this.data().dateStart
+    }
+
     public func build(): Unit {
         Column(space: 14) {
             Column(space: 4) {
@@ -52,19 +62,17 @@ public class ChartsSection {
             .borderRadius(24)
             .backgroundColor(AppTheme.surfacePrimary())
 
-            ChartMarker(label: "Selected period transactions appear below the chart")
-
             if (this.recurrenceName == "Weekly") {
-                WeeklyChart(expenses: this.data().expenses)
+                WeeklyChart(expenses: this.periodExpenses())
             }
             if (this.recurrenceName == "Monthly") {
-                MonthlyChart(expenses: this.data().expenses, rangeStart: this.data().dateStart)
+                MonthlyChart(expenses: this.periodExpenses(), rangeStart: this.rangeStartValue())
             }
             if (this.recurrenceName == "Yearly") {
-                YearlyChart(expenses: this.data().expenses)
+                YearlyChart(expenses: this.periodExpenses())
             }
 
-            ExpensesByPeriodSection(title: "Transactions", expenses: this.data().expenses)
+            ExpensesByPeriodSection(title: "", expenses: this.periodExpenses())
         }
         .width(100.percent)
     }

@@ -43,7 +43,7 @@ public class AnalyticsPage {
     public func build(): Unit {
         Scroll() {
             Column(space: 16) {
-                HeaderCard(title: "Analytics", iconName: "analytics", actionIconName: "info", subtitle: "Browse weekly, monthly, and yearly trends", dialogText: "Switch weekly, monthly, and yearly periods here and keep the analytics page read-only like the source app.", actionRoute: "")
+                HeaderCard(title: "Analytics", iconName: "analytics", actionIconName: "info", subtitle: "", dialogText: "Your entire transaction history on this page will be displayed in a line chart. You can also swipe the screen to view the transaction history based on a specific time range.", actionRoute: "")
 
                 Row(space: 8) {
                     Button("Weekly")
@@ -88,9 +88,6 @@ public class AnalyticsPage {
                             .fontSize(15)
                             .fontWeight(FontWeight.Medium)
                             .fontColor(AppTheme.textPrimary())
-                        Text("Period ${this.selectedPage + 1}")
-                            .fontSize(12)
-                            .fontColor(AppTheme.textSecondary())
                     }
                     .width(38.percent)
                     .alignItems(HorizontalAlign.Center)

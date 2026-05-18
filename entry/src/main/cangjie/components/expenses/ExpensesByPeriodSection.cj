@@ -5,17 +5,17 @@ import ohos.arkui.state_macro_manage.*
 import std.collection.ArrayList
 import ohos_app_cangjie_entry.data.model.Expense
 import ohos_app_cangjie_entry.theme.AppTheme
+import ohos_app_cangjie_entry.utils.formatDay
 
 @Component
 public class ExpensesByPeriodSection {
     @Prop var title: String
     @Prop var expenses: ArrayList<Expense>
 
-    private func sortedDates(): ArrayList<String> {
+    private func uniqueSortedDatesDescending(): ArrayList<String> {
         let dates = ArrayList<String>()
         for (expense in this.expenses) {
-            let dayKey = expense.dateValue.replace(" 00:00:00", "")
-            let dateOnly = if (dayKey.indexOf(" ") != Option.None) { expense.dateValue.split(" ")[0] } else { dayKey }
+            let dateOnly = expense.dateValue.split(" ")[0]
             var exists = false
             for (existing in dates) {
                 if (existing == dateOnly) {
@@ -39,6 +39,10 @@ public class ExpensesByPeriodSection {
             }
         }
         dates
+    }
+
+    private func sortedDates(): ArrayList<String> {
+        this.uniqueSortedDatesDescending()
     }
 
     private func expensesForDate(dateValue: String): ArrayList<Expense> {
@@ -75,13 +79,15 @@ public class ExpensesByPeriodSection {
 
     public func build(): Unit {
         Column(space: 12) {
-            Text(this.title)
-                .fontSize(20)
-                .fontWeight(FontWeight.Medium)
-                .fontColor(AppTheme.textPrimary())
+            if (this.title != "") {
+                Text(this.title)
+                    .fontSize(20)
+                    .fontWeight(FontWeight.Medium)
+                    .fontColor(AppTheme.textPrimary())
+            }
 
             if (this.expenses.size == 0) {
-                Text("No transactions in this period.")
+                Text("Transaction history for this time period is not available.")
                     .fontSize(14)
                     .fontColor(AppTheme.textSecondary())
                     .padding(left: 18, right: 18, top: 20, bottom: 20)

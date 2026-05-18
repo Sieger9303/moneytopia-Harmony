@@ -67,9 +67,9 @@ public func formatDay(day: String): String {
         return "Yesterday"
     }
     if (target.year != today.year) {
-        return target.format("dd MMM yyyy")
+        return target.format("EEE, dd MMM yyyy")
     }
-    target.format("dd MMM")
+    target.format("EEE, dd MMM")
 }
 
 public func formatDayForRange(day: String): String {
