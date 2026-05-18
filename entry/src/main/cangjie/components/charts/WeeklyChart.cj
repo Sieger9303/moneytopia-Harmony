@@ -54,16 +54,20 @@ public class WeeklyChart {
     }
 
     private func pointLabelsKey(): String {
-        "Mon|Tue|Wed|Thu|Fri|Sat|Sun"
+        "Mon,Tue,Wed,Thu,Fri,Sat,Sun"
     }
 
     private func pointTotalsKey(): String {
-        "${this.totalForOffset(0)}|${this.totalForOffset(1)}|${this.totalForOffset(2)}|${this.totalForOffset(3)}|${this.totalForOffset(4)}|${this.totalForOffset(5)}|${this.totalForOffset(6)}"
+        "${this.totalForOffset(0)},${this.totalForOffset(1)},${this.totalForOffset(2)},${this.totalForOffset(3)},${this.totalForOffset(4)},${this.totalForOffset(5)},${this.totalForOffset(6)}"
+    }
+
+    private func pointTotalsIdentityKey(): String {
+        "${this.totalForOffset(0)}_${this.totalForOffset(1)}_${this.totalForOffset(2)}_${this.totalForOffset(3)}_${this.totalForOffset(4)}_${this.totalForOffset(5)}_${this.totalForOffset(6)}"
     }
 
     private func periodKey(): String {
         let snapshot = this.snapshot()
-        "${this.recurrenceName}-${this.page}-${snapshot.dateStart}-${snapshot.dateEnd}-${this.pointTotalsKey()}"
+        "${this.recurrenceName}-${this.page}-${snapshot.dateStart}-${snapshot.dateEnd}-${this.pointTotalsIdentityKey()}"
     }
 
     private func chartInstanceKeys(): ArrayList<String> {
@@ -74,6 +78,9 @@ public class WeeklyChart {
 
     public func build(): Unit {
         Column() {
+            Text("DEBUG ${this.pointTotalsKey()}")
+            .fontSize(9)
+            .fontColor(Color.Red)
             ForEach(this.chartInstanceKeys(), itemGeneratorFunc: { key: String, _: Int64 =>
                 LineChartCard(
                     title: "",

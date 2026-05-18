@@ -25,6 +25,10 @@ public class SettingsPage {
     private let expenseStore = ExpenseStore()
     private let preferenceStore = PreferenceStore()
 
+    private func anyDialogVisible(): Bool {
+        this.showDeleteDialog || this.showLanguageDialog || this.showCurrencyDialog
+    }
+
     private func menuItems(): ArrayList<MenuSettingItem> {
         let items = ArrayList<MenuSettingItem>()
         items.add(MenuSettingItem(headlineContent: "Delete Transactions", supportingContent: "Remove all saved expenses"))
@@ -55,7 +59,6 @@ public class SettingsPage {
     }
 
     private func confirmLanguageReset(): Unit {
-        this.expenseStore.deleteAllExpenses()
         this.showLanguageDialog = false
         this.statusMessage = "Transaction data cleared. Change the app language in system settings."
         RouteState.navigate("settings/languages")
@@ -71,134 +74,207 @@ public class SettingsPage {
         this.statusMessage = "Currency updated to ${this.preferenceStore.getCurrencySymbol()}"
     }
 
+    private func closeDialogs(): Unit {
+        this.showDeleteDialog = false
+        this.showLanguageDialog = false
+        this.showCurrencyDialog = false
+    }
+
     public func aboutToAppear(): Unit {
         this.refreshSummaries()
     }
 
     public func build(): Unit {
-        Column(space: 16) {
-            HeaderCard(title: "Settings", iconName: "settings", actionIconName: "info", subtitle: "Manage preferences and app data", dialogText: "Use the menu rows below to delete data, follow the language caution flow, edit categories, update currency, or open the about page.", actionRoute: "")
+        Stack() {
+            Scroll() {
+                Column(space: 16) {
+                    HeaderCard(title: "Settings", iconName: "settings", actionIconName: "info", subtitle: "Manage preferences and app data", dialogText: "Use the menu rows below to delete data, follow the language caution flow, edit categories, update currency, or open the about page.", actionRoute: "")
 
-            Row(space: 12) {
-                Column(space: 5) {
-                    Text("Currency")
-                        .fontSize(12)
-                        .fontColor(AppTheme.textSecondary())
-                    Text(this.preferenceStore.getCurrencySymbol())
-                        .fontSize(20)
-                        .fontColor(AppTheme.textPrimary())
-                }
-                .width(48.percent)
-                .padding(left: 18, right: 18, top: 18, bottom: 18)
-                .borderRadius(24)
-                .backgroundColor(AppTheme.surfacePrimary())
+                    Row(space: 12) {
+                        Column(space: 5) {
+                            Text("Currency")
+                                .fontSize(12)
+                                .fontColor(AppTheme.textSecondary())
+                            Text(this.preferenceStore.getCurrencySymbol())
+                                .fontSize(20)
+                                .fontColor(AppTheme.textPrimary())
+                        }
+                        .width(48.percent)
+                        .padding(left: 18, right: 18, top: 18, bottom: 18)
+                        .borderRadius(24)
+                        .backgroundColor(AppTheme.surfacePrimary())
 
-                Column(space: 5) {
-                    Text("Language")
-                        .fontSize(12)
-                        .fontColor(AppTheme.textSecondary())
-                    Text(this.languageSummary)
-                        .fontSize(20)
-                        .fontColor(AppTheme.textPrimary())
-                }
-                .width(48.percent)
-                .padding(left: 18, right: 18, top: 18, bottom: 18)
-                .borderRadius(24)
-                .backgroundColor(AppTheme.surfacePrimary())
-            }
-            .width(100.percent)
-            .justifyContent(FlexAlign.SpaceBetween)
-
-            ForEach(this.menuItems(), itemGeneratorFunc: { item: MenuSettingItem, _: Int64 =>
-                Row(space: 12) {
-                    Row() {
-                        AppIcon(name: this.iconNameFor(item.headlineContent), size: 15, color: Int64(AppTheme.brandPrimary()))
+                        Column(space: 5) {
+                            Text("Language")
+                                .fontSize(12)
+                                .fontColor(AppTheme.textSecondary())
+                            Text(this.languageSummary)
+                                .fontSize(20)
+                                .fontColor(AppTheme.textPrimary())
+                        }
+                        .width(48.percent)
+                        .padding(left: 18, right: 18, top: 18, bottom: 18)
+                        .borderRadius(24)
+                        .backgroundColor(AppTheme.surfacePrimary())
                     }
-                    .width(38)
-                    .height(38)
-                    .justifyContent(FlexAlign.Center)
-                    .alignItems(VerticalAlign.Center)
-                    .borderRadius(19)
-                    .backgroundColor(AppTheme.surfaceAccentSoft())
+                    .width(100.percent)
+                    .justifyContent(FlexAlign.SpaceBetween)
 
-                    Column(space: 3) {
-                        Text(item.headlineContent)
-                            .fontSize(16)
-                            .fontColor(AppTheme.textPrimary())
-                        Text(item.supportingContent)
+                    ForEach(this.menuItems(), itemGeneratorFunc: { item: MenuSettingItem, _: Int64 =>
+                        Row(space: 12) {
+                            Row() {
+                                AppIcon(name: this.iconNameFor(item.headlineContent), size: 15, color: Int64(AppTheme.brandPrimary()))
+                            }
+                            .width(38)
+                            .height(38)
+                            .justifyContent(FlexAlign.Center)
+                            .alignItems(VerticalAlign.Center)
+                            .borderRadius(19)
+                            .backgroundColor(AppTheme.surfaceAccentSoft())
+
+                            Column(space: 3) {
+                                Text(item.headlineContent)
+                                    .fontSize(16)
+                                    .fontColor(AppTheme.textPrimary())
+                                Text(item.supportingContent)
+                                    .fontSize(12)
+                                    .fontColor(AppTheme.textSecondary())
+                            }
+                            .width(68.percent)
+                            .alignItems(HorizontalAlign.Start)
+                        }
+                        .padding(left: 14, right: 14, top: 14, bottom: 14)
+                        .width(100.percent)
+                        .alignItems(VerticalAlign.Center)
+                        .borderRadius(24)
+                        .backgroundColor(AppTheme.surfacePrimary())
+                        .onClick({ _ =>
+                            if (item.headlineContent == "Delete Transactions") {
+                                this.showDeleteDialog = true
+                                this.showLanguageDialog = false
+                                this.showCurrencyDialog = false
+                                this.statusMessage = ""
+                            }
+                            if (item.headlineContent == "Language") {
+                                this.showDeleteDialog = false
+                                this.showLanguageDialog = true
+                                this.showCurrencyDialog = false
+                                this.statusMessage = ""
+                            }
+                            if (item.headlineContent == "Categories") {
+                                RouteState.navigate("settings/categories")
+                            }
+                            if (item.headlineContent == "Currency") {
+                                this.currencyDraft = this.preferenceStore.getCurrencySymbol()
+                                this.showDeleteDialog = false
+                                this.showLanguageDialog = false
+                                this.showCurrencyDialog = true
+                                this.statusMessage = ""
+                            }
+                            if (item.headlineContent == "About") {
+                                RouteState.navigate("settings/about")
+                            }
+                        })
+                    }, keyGeneratorFunc: { item: MenuSettingItem, _: Int64 =>
+                        item.headlineContent
+                    })
+
+                    if (this.statusMessage != "") {
+                        Text(this.statusMessage)
                             .fontSize(12)
                             .fontColor(AppTheme.textSecondary())
                     }
-                    .width(68.percent)
-                    .alignItems(HorizontalAlign.Start)
                 }
-                .padding(left: 14, right: 14, top: 14, bottom: 14)
                 .width(100.percent)
-                .alignItems(VerticalAlign.Center)
-                .borderRadius(24)
-                .backgroundColor(AppTheme.surfacePrimary())
-                .onClick({ _ =>
-                    if (item.headlineContent == "Delete Transactions") {
-                        this.showDeleteDialog = true
-                        this.statusMessage = ""
-                    }
-                    if (item.headlineContent == "Language") {
-                        this.showLanguageDialog = true
-                        this.statusMessage = ""
-                    }
-                    if (item.headlineContent == "Categories") {
-                        RouteState.navigate("settings/categories")
-                    }
-                    if (item.headlineContent == "Currency") {
-                        this.currencyDraft = this.preferenceStore.getCurrencySymbol()
-                        this.showCurrencyDialog = true
-                        this.statusMessage = ""
-                    }
-                    if (item.headlineContent == "About") {
-                        RouteState.navigate("settings/about")
-                    }
-                })
-            }, keyGeneratorFunc: { item: MenuSettingItem, _: Int64 =>
-                item.headlineContent
-            })
-
-            if (this.showDeleteDialog) {
-                DeleteConfirmDialog(title: "Delete transactions?", message: "All transaction history that you have created will be deleted and cannot be canceled.")
-                Row(space: 8) {
-                    Button("Cancel").backgroundColor(AppTheme.surfaceSecondary()).borderRadius(18).onClick({ _ => this.showDeleteDialog = false })
-                    Button("Delete").fontColor(AppTheme.onBrandPrimary()).backgroundColor(AppTheme.dangerPrimary()).borderRadius(18).onClick({ _ => this.eraseAllTransactions() })
-                }
             }
+            .scrollBar(BarState.Off)
+            .width(100.percent)
+            .height(100.percent)
 
-            if (this.showLanguageDialog) {
-                DeleteConfirmDialog(title: "Caution", message: "Changing language clears transaction history first. Continue to the system language flow?")
-                Row(space: 8) {
-                    Button("Cancel").backgroundColor(AppTheme.surfaceSecondary()).borderRadius(18).onClick({ _ => this.showLanguageDialog = false })
-                    Button("Continue").fontColor(AppTheme.onBrandPrimary()).backgroundColor(AppTheme.brandPrimary()).borderRadius(18).onClick({ _ => this.confirmLanguageReset() })
+            if (this.anyDialogVisible()) {
+                Column() {
+                    Column(space: 12) {
+                        if (this.showDeleteDialog) {
+                            DeleteConfirmDialog(title: "Delete transactions?", message: "All transaction history that you have created will be deleted and cannot be canceled.")
+                            Row(space: 8) {
+                                Button("Cancel")
+                                    .backgroundColor(AppTheme.surfaceSecondary())
+                                    .fontColor(AppTheme.textPrimary())
+                                    .borderRadius(18)
+                                    .onClick({ _ =>
+                                        this.closeDialogs()
+                                    })
+                                Button("Delete")
+                                    .fontColor(AppTheme.onBrandPrimary())
+                                    .backgroundColor(AppTheme.dangerPrimary())
+                                    .borderRadius(18)
+                                    .onClick({ _ =>
+                                        this.eraseAllTransactions()
+                                    })
+                            }
+                        }
+
+                        if (this.showLanguageDialog) {
+                            DeleteConfirmDialog(title: "Caution", message: "Changing language clears transaction history first. Continue to the system language flow?")
+                            Row(space: 8) {
+                                Button("Cancel")
+                                    .backgroundColor(AppTheme.surfaceSecondary())
+                                    .fontColor(AppTheme.textPrimary())
+                                    .borderRadius(18)
+                                    .onClick({ _ =>
+                                        this.closeDialogs()
+                                    })
+                                Button("Continue")
+                                    .fontColor(AppTheme.onBrandPrimary())
+                                    .backgroundColor(AppTheme.brandPrimary())
+                                    .borderRadius(18)
+                                    .onClick({ _ =>
+                                        this.confirmLanguageReset()
+                                    })
+                            }
+                        }
+
+                        if (this.showCurrencyDialog) {
+                            CurrencyDialog(currentSymbol: this.preferenceStore.getCurrencySymbol())
+                            TextInput(placeholder: "$", text: this.currencyDraft)
+                                .backgroundColor(AppTheme.surfacePrimary())
+                                .borderRadius(20)
+                                .padding(left: 14, right: 14, top: 12, bottom: 12)
+                                .onChange({ text =>
+                                    this.currencyDraft = text
+                                })
+                            Row(space: 8) {
+                                Button("Cancel")
+                                    .backgroundColor(AppTheme.surfaceSecondary())
+                                    .fontColor(AppTheme.textPrimary())
+                                    .borderRadius(18)
+                                    .onClick({ _ =>
+                                        this.closeDialogs()
+                                    })
+                                Button("Save")
+                                    .fontColor(AppTheme.onBrandPrimary())
+                                    .backgroundColor(AppTheme.brandPrimary())
+                                    .borderRadius(18)
+                                    .onClick({ _ =>
+                                        this.saveCurrency()
+                                    })
+                            }
+                        }
+                    }
+                    .width(88.percent)
+                    .padding(left: 18, right: 18, top: 18, bottom: 18)
+                    .borderRadius(28)
+                    .backgroundColor(AppTheme.surfaceElevated())
                 }
-            }
-
-            if (this.showCurrencyDialog) {
-                CurrencyDialog(currentSymbol: this.currencyDraft)
-                TextInput(placeholder: "$", text: this.currencyDraft)
-                    .backgroundColor(AppTheme.surfacePrimary())
-                    .borderRadius(20)
-                    .padding(left: 14, right: 14, top: 12, bottom: 12)
-                    .onChange({ text =>
-                        this.currencyDraft = text
-                    })
-                Row(space: 8) {
-                    Button("Cancel").backgroundColor(AppTheme.surfaceSecondary()).borderRadius(18).onClick({ _ => this.showCurrencyDialog = false })
-                    Button("Save").fontColor(AppTheme.onBrandPrimary()).backgroundColor(AppTheme.brandPrimary()).borderRadius(18).onClick({ _ => this.saveCurrency() })
-                }
-            }
-
-            if (this.statusMessage != "") {
-                Text(this.statusMessage)
-                    .fontSize(12)
-                    .fontColor(AppTheme.textSecondary())
+                .width(100.percent)
+                .height(100.percent)
+                .alignItems(HorizontalAlign.Center)
+                .justifyContent(FlexAlign.Center)
+                .padding(left: 16, right: 16, top: 16, bottom: 16)
+                .backgroundColor(AppTheme.surfaceSecondary())
             }
         }
         .width(100.percent)
+        .height(100.percent)
     }
 }

@@ -71,16 +71,20 @@ public class YearlyChart {
     }
 
     private func pointLabelsKey(): String {
-        "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec"
+        "Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec"
     }
 
     private func pointTotalsKey(): String {
-        "${this.totalForMonth(1)}|${this.totalForMonth(2)}|${this.totalForMonth(3)}|${this.totalForMonth(4)}|${this.totalForMonth(5)}|${this.totalForMonth(6)}|${this.totalForMonth(7)}|${this.totalForMonth(8)}|${this.totalForMonth(9)}|${this.totalForMonth(10)}|${this.totalForMonth(11)}|${this.totalForMonth(12)}"
+        "${this.totalForMonth(1)},${this.totalForMonth(2)},${this.totalForMonth(3)},${this.totalForMonth(4)},${this.totalForMonth(5)},${this.totalForMonth(6)},${this.totalForMonth(7)},${this.totalForMonth(8)},${this.totalForMonth(9)},${this.totalForMonth(10)},${this.totalForMonth(11)},${this.totalForMonth(12)}"
+    }
+
+    private func pointTotalsIdentityKey(): String {
+        "${this.totalForMonth(1)}_${this.totalForMonth(2)}_${this.totalForMonth(3)}_${this.totalForMonth(4)}_${this.totalForMonth(5)}_${this.totalForMonth(6)}_${this.totalForMonth(7)}_${this.totalForMonth(8)}_${this.totalForMonth(9)}_${this.totalForMonth(10)}_${this.totalForMonth(11)}_${this.totalForMonth(12)}"
     }
 
     private func periodKey(): String {
         let snapshot = this.snapshot()
-        "${this.recurrenceName}-${this.page}-${snapshot.dateStart}-${snapshot.dateEnd}-${this.pointTotalsKey()}"
+        "${this.recurrenceName}-${this.page}-${snapshot.dateStart}-${snapshot.dateEnd}-${this.pointTotalsIdentityKey()}"
     }
 
     private func chartInstanceKeys(): ArrayList<String> {

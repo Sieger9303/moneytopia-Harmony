@@ -145,13 +145,24 @@ public class ExpenseStore {
         }
     }
 
+    private func preferencesReady(): Bool {
+        return this.getPreferences(ExpenseStore.expensesPrefsName).isSome() &&
+               this.getPreferences(ExpenseStore.categoriesPrefsName).isSome()
+    }
+
     private func ensureLoaded(): Unit {
         if (ExpenseStore.dataLoaded) {
             return
         }
-        ExpenseStore.dataLoaded = true
+
+        if (!this.preferencesReady()) {
+            Hilog.error(1, "Moneytopia", "Preferences are not ready; defer ExpenseStore loading")
+            return
+        }
+
         ExpenseStore.sharedExpenses.clear()
         ExpenseStore.sharedCategories.clear()
+
         try {
             match (this.getPreferences(ExpenseStore.expensesPrefsName)) {
                 case Option.Some(preferences) =>
@@ -170,8 +181,9 @@ public class ExpenseStore {
                         ))
                     }
                 case _ =>
-                    ExpenseStore.nextExpenseId = 1
+                    return
             }
+
             match (this.getPreferences(ExpenseStore.categoriesPrefsName)) {
                 case Option.Some(preferences) =>
                     let count = this.getIntPreference(preferences, ExpenseStore.countKey, 0)
@@ -187,8 +199,10 @@ public class ExpenseStore {
                         ExpenseStore.nextCategoryId = 13
                     }
                 case _ =>
-                    ExpenseStore.nextCategoryId = 13
+                    return
             }
+
+            ExpenseStore.dataLoaded = true
         } catch (e: BusinessException) {
             Hilog.error(1, "Moneytopia", "Failed to load persisted store data: ${e.message}")
         }

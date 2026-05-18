@@ -77,20 +77,19 @@ public class MonthlyChart {
             return day.toString()
         }
 
-        ""
+        " "
     }
 
     private func encodeParts(parts: ArrayList<String>): String {
         var encoded = ""
-        if (parts.size <= 0) {
-            return encoded
-        }
+        var index: Int64 = 0
 
-        for (index in 0..parts.size - 1) {
+        while (index < parts.size) {
             if (index > 0) {
-                encoded += "|"
+                encoded += ","
             }
             encoded += parts[index]
+            index += 1
         }
 
         encoded
@@ -100,8 +99,10 @@ public class MonthlyChart {
         let labels = ArrayList<String>()
         let totalDays = this.daysInMonth()
 
-        for (day in 1..totalDays) {
+        var day: Int64 = 1
+        while (day <= totalDays) {
             labels.add(this.labelForDay(day, totalDays))
+            day += 1
         }
 
         this.encodeParts(labels)
@@ -111,16 +112,46 @@ public class MonthlyChart {
         let totals = ArrayList<String>()
         let totalDays = this.daysInMonth()
 
-        for (day in 1..totalDays) {
+        var day: Int64 = 1
+        while (day <= totalDays) {
             totals.add(this.totalForDay(day).toString())
+            day += 1
         }
 
         this.encodeParts(totals)
     }
 
+    private func encodeIdentityParts(parts: ArrayList<String>): String {
+        var encoded = ""
+        var index: Int64 = 0
+
+        while (index < parts.size) {
+            if (index > 0) {
+                encoded += "_"
+            }
+            encoded += parts[index]
+            index += 1
+        }
+
+        encoded
+    }
+
+    private func pointTotalsIdentityKey(): String {
+        let totals = ArrayList<String>()
+        let totalDays = this.daysInMonth()
+
+        var day: Int64 = 1
+        while (day <= totalDays) {
+            totals.add(this.totalForDay(day).toString())
+            day += 1
+        }
+
+        this.encodeIdentityParts(totals)
+    }
+
     private func periodKey(): String {
         let snapshot = this.snapshot()
-        "${this.recurrenceName}-${this.page}-${snapshot.dateStart}-${snapshot.dateEnd}-${this.pointTotalsKey()}"
+        "${this.recurrenceName}-${this.page}-${snapshot.dateStart}-${snapshot.dateEnd}-${this.pointTotalsIdentityKey()}"
     }
 
     private func chartInstanceKeys(): ArrayList<String> {

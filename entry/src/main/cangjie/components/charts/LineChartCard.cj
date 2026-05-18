@@ -66,30 +66,45 @@ public class LineChartCard {
     private func drawableWidth(): Float64 { this.chartWidth() - this.horizontalPadding() * 2.0 }
     private func drawableHeight(): Float64 { this.chartHeight() - this.verticalPadding() * 2.0 }
 
+    private func axisLabelWidth(): Float64 {
+        this.horizontalPadding() * 2.0
+    }
+
     private func hasVisibleLabels(): Bool {
-        for (point in this.points()) {
-            if (point.label != "") {
+        let points = this.points()
+        var index: Int64 = 0
+        while (index < points.size) {
+            if (points[index].label != "" && points[index].label != " ") {
                 return true
             }
+            index += 1
         }
         false
     }
 
+    private func safeParseTotal(text: String): Float64 {
+        if (text == "" || text == " ") {
+            return 0.0
+        }
+        Float64.parse(text)
+    }
+
     private func points(): ArrayList<LineChartPoint> {
         let items = ArrayList<LineChartPoint>()
-        let labels = this.pointLabelsKey.split("|")
-        let totals = this.pointTotalsKey.split("|")
+        let labels = this.pointLabelsKey.split(",")
+        let totals = this.pointTotalsKey.split(",")
         let count = if (labels.size < totals.size) { labels.size } else { totals.size }
-        if (count <= 0) {
-            return items
-        }
-        for (index in 0..count - 1) {
+
+        var index: Int64 = 0
+        while (index < count) {
             items.add(LineChartPoint(
                 id: "${this.periodKey}-point_${index}",
                 label: labels[index],
-                total: Float64.parse(totals[index])
+                total: this.safeParseTotal(totals[index])
             ))
+            index += 1
         }
+
         items
     }
 
@@ -135,10 +150,9 @@ public class LineChartCard {
     private func segments(): ArrayList<LineChartSegment> {
         let items = ArrayList<LineChartSegment>()
         let points = this.points()
-        if (points.size <= 1) {
-            return items
-        }
-        for (index in 0..points.size - 2) {
+
+        var index: Int64 = 0
+        while (index + 1 < points.size) {
             let nextIndex = index + 1
             items.add(LineChartSegment(
                 id: "${this.periodKey}-segment_${index}",
@@ -147,19 +161,25 @@ public class LineChartCard {
                 endX: this.pointX(nextIndex),
                 endY: this.pointY(nextIndex)
             ))
+            index += 1
         }
+
         items
     }
 
     private func gridLines(): ArrayList<GridLinePoint> {
         let items = ArrayList<GridLinePoint>()
-        for (index in 0..4) {
+
+        var index: Int64 = 0
+        while (index <= 4) {
             let ratio = Float64(index) / 4.0
             items.add(GridLinePoint(
                 id: "${this.periodKey}-grid_${index}",
                 y: this.verticalPadding() + this.drawableHeight() * ratio
             ))
+            index += 1
         }
+
         items
     }
 
@@ -174,7 +194,9 @@ public class LineChartCard {
                         .endPoint((this.chartWidth() - this.horizontalPadding(), gridLine.y))
                         .stroke(AppTheme.surfaceAccentStrong())
                         .strokeWidth(1)
-                }, keyGeneratorFunc: { gridLine: GridLinePoint, _: Int64 => gridLine.id })
+                }, keyGeneratorFunc: { gridLine: GridLinePoint, _: Int64 =>
+                    gridLine.id
+                })
 
                 ForEach(this.segments(), itemGeneratorFunc: { segment: LineChartSegment, _: Int64 =>
                     Line()
@@ -185,25 +207,48 @@ public class LineChartCard {
                         .stroke(AppTheme.brandPrimary())
                         .strokeWidth(3)
                         .strokeLineCap(LineCapStyle.Round)
-                }, keyGeneratorFunc: { segment: LineChartSegment, _: Int64 => segment.id })
+                }, keyGeneratorFunc: { segment: LineChartSegment, _: Int64 =>
+                    segment.id
+                })
             }
             .width(this.chartWidth())
             .height(this.chartHeight())
 
             if (this.hasVisibleLabels()) {
-                Row() {
-                    ForEach(this.points(), itemGeneratorFunc: { point: LineChartPoint, _: Int64 =>
-                        Text(point.label)
-                            .fontSize(10)
-                            .fontColor(AppTheme.textSecondary())
-                            .layoutWeight(1)
-                    }, keyGeneratorFunc: { point: LineChartPoint, _: Int64 => point.id })
+                if (this.points().size <= 7) {
+                    Row() {
+                        ForEach(this.points(), itemGeneratorFunc: { point: LineChartPoint, _: Int64 =>
+                            Text(point.label)
+                                .fontSize(10)
+                                .fontColor(AppTheme.textSecondary())
+                                .textAlign(TextAlign.Center)
+                                .width(this.axisLabelWidth())
+                        }, keyGeneratorFunc: { point: LineChartPoint, _: Int64 =>
+                            point.id
+                        })
+                    }
+                    .width(this.chartWidth())
+                    .justifyContent(FlexAlign.SpaceBetween)
+                    .margin(top: 8)
+                } else {
+                    Row() {
+                        ForEach(this.points(), itemGeneratorFunc: { point: LineChartPoint, _: Int64 =>
+                            Text(point.label)
+                                .fontSize(if (this.points().size > 20) { 8 } else { 9 })
+                                .fontColor(AppTheme.textSecondary())
+                                .textAlign(TextAlign.Center)
+                                .layoutWeight(1)
+                        }, keyGeneratorFunc: { point: LineChartPoint, _: Int64 =>
+                            point.id
+                        })
+                    }
+                    .width(this.chartWidth())
+                    .margin(top: 8)
                 }
-                .width(100.percent)
-                .margin(top: 8)
             }
         }
         .padding(left: 0, right: 0, top: 0, bottom: 0)
         .width(100.percent)
+        .alignItems(HorizontalAlign.Center)
     }
 }
