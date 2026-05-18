@@ -91,24 +91,19 @@ public class MainPage {
                     .height(100.percent)
 
                     if (this.showFloatingAdd()) {
-                        Column() {
-                            Button("+")
-                                .width(58)
-                                .height(58)
-                                .fontSize(26)
-                                .fontWeight(FontWeight.Medium)
-                                .fontColor(AppTheme.onBrandPrimary())
-                                .backgroundColor(AppTheme.brandPrimary())
-                                .borderRadius(20)
-                                .onClick({ _ =>
-                                    RouteState.navigate("expenses/add_expenses")
-                                })
-                        }
-                        .width(100.percent)
-                        .height(100.percent)
-                        .alignItems(HorizontalAlign.End)
-                        .justifyContent(FlexAlign.End)
-                        .padding(right: 24, bottom: 24)
+                        Button("+")
+                            .width(58)
+                            .height(58)
+                            .fontSize(26)
+                            .fontWeight(FontWeight.Medium)
+                            .fontColor(AppTheme.onBrandPrimary())
+                            .backgroundColor(AppTheme.brandPrimary())
+                            .borderRadius(20)
+                            .align(Alignment.BottomEnd)
+                            .margin(right: 24, bottom: 24)
+                            .onClick({ _ =>
+                                RouteState.navigate("expenses/add_expenses")
+                            })
                     }
                 }
                 .width(100.percent)
