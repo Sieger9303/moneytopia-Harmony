@@ -214,8 +214,31 @@ public class ExpenseStore {
         left.year == right.year
     }
 
+    private func dayOfWeekNumber(day: DayOfWeek): Int64 {
+        match (day) {
+            case Monday => 1
+            case Tuesday => 2
+            case Wednesday => 3
+            case Thursday => 4
+            case Friday => 5
+            case Saturday => 6
+            case Sunday => 7
+        }
+    }
+
+    private func dayKey(date: DateTime): String {
+        date.format(ExpenseStore.dayKeyFormat)
+    }
+
     private func sameWeek(left: DateTime, right: DateTime): Bool {
-        left.isoWeek == right.isoWeek
+        let weekStart = right.addDays(-(this.dayOfWeekNumber(right.dayOfWeek) - 1))
+        let weekEnd = weekStart.addDays(6)
+
+        let leftKey = this.dayKey(left)
+        let startKey = this.dayKey(weekStart)
+        let endKey = this.dayKey(weekEnd)
+
+        leftKey >= startKey && leftKey <= endKey
     }
 
     private func matchesRecurrence(expense: Expense, recurrenceName: String): Bool {
