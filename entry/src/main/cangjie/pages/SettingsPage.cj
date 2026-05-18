@@ -19,6 +19,7 @@ public class SettingsPage {
     @State var showLanguageDialog: Bool = false
     @State var showCurrencyDialog: Bool = false
     @State var currencyDraft: String = ""
+    @State var currencySymbol: String = ""
     @State var statusMessage: String = ""
     @State var languageSummary: String = "System settings"
 
@@ -49,7 +50,8 @@ public class SettingsPage {
 
     private func refreshSummaries(): Unit {
         this.languageSummary = "System settings"
-        this.currencyDraft = this.preferenceStore.getCurrencySymbol()
+        this.currencySymbol = this.preferenceStore.getCurrencySymbol()
+        this.currencyDraft = this.currencySymbol
     }
 
     private func eraseAllTransactions(): Unit {
@@ -70,8 +72,11 @@ public class SettingsPage {
             return
         }
         this.preferenceStore.saveCurrencySymbol(this.currencyDraft)
+        this.currencySymbol = this.preferenceStore.getCurrencySymbol()
+        this.currencyDraft = this.currencySymbol
         this.showCurrencyDialog = false
-        this.statusMessage = "Currency updated to ${this.preferenceStore.getCurrencySymbol()}"
+        this.statusMessage = "Currency updated to ${this.currencySymbol}"
+        RouteState.notifyDataChanged()
     }
 
     private func closeDialogs(): Unit {
@@ -95,7 +100,7 @@ public class SettingsPage {
                             Text("Currency")
                                 .fontSize(12)
                                 .fontColor(AppTheme.textSecondary())
-                            Text(this.preferenceStore.getCurrencySymbol())
+                            Text(this.currencySymbol)
                                 .fontSize(20)
                                 .fontColor(AppTheme.textPrimary())
                         }
@@ -165,7 +170,7 @@ public class SettingsPage {
                                 RouteState.navigate("settings/categories")
                             }
                             if (item.headlineContent == "Currency") {
-                                this.currencyDraft = this.preferenceStore.getCurrencySymbol()
+                                this.currencyDraft = this.currencySymbol
                                 this.showDeleteDialog = false
                                 this.showLanguageDialog = false
                                 this.showCurrencyDialog = true
@@ -235,7 +240,7 @@ public class SettingsPage {
                         }
 
                         if (this.showCurrencyDialog) {
-                            CurrencyDialog(currentSymbol: this.preferenceStore.getCurrencySymbol())
+                            CurrencyDialog(currentSymbol: this.currencySymbol)
                             TextInput(placeholder: "$", text: this.currencyDraft)
                                 .backgroundColor(AppTheme.surfacePrimary())
                                 .borderRadius(20)

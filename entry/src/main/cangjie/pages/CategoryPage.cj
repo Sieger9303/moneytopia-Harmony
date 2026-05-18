@@ -101,14 +101,18 @@ public class CategoryPage {
         if (this.deleteId == "") {
             return
         }
-        this.expenseStore.deleteCategory(this.deleteId)
-        this.reloadCategories()
-        if (this.editingId == this.deleteId) {
-            this.resetDraft()
-        }
+
+        let targetId = this.deleteId
+        this.showDeleteDialog = false
         this.deleteId = ""
         this.deleteLabel = ""
-        this.showDeleteDialog = false
+
+        if (this.editingId == targetId) {
+            this.resetDraft()
+        }
+
+        this.expenseStore.deleteCategory(targetId)
+        this.reloadCategories()
     }
 
     private func closeEditors(): Unit {
@@ -214,111 +218,144 @@ public class CategoryPage {
 
             if (this.anyDialogVisible()) {
                 Column() {
-                    Column(space: 12) {
-                        if (this.showAddDialog || this.showEditDialog) {
-                            Column(space: 10) {
-                                Text(if (this.showEditDialog) { "Edit Category" } else { "Add Category" })
-                                    .fontSize(18)
-                                    .fontWeight(FontWeight.Medium)
-                                    .fontColor(AppTheme.textPrimary())
-                                TextInput(placeholder: "Category name", text: this.draftName)
-                                    .backgroundColor(AppTheme.surfacePrimary())
-                                    .fontColor(AppTheme.textPrimary())
-                                    .borderRadius(20)
-                                    .padding(left: 14, right: 14, top: 12, bottom: 12)
-                                    .onChange({ text =>
-                                        this.draftName = text
-                                    })
-                                Row(space: 10) {
-                                    Row() {
-                                        AppIcon(name: resolveCategoryIconName(this.draftIcon), size: 18, color: Int64(AppTheme.brandPrimary()))
+                    Scroll() {
+                        Column(space: 12) {
+                            if (this.showAddDialog || this.showEditDialog) {
+                                Column(space: 10) {
+                                    Text(if (this.showEditDialog) { "Edit Category" } else { "Add Category" })
+                                        .fontSize(18)
+                                        .fontWeight(FontWeight.Medium)
+                                        .fontColor(AppTheme.textPrimary())
+
+                                    TextInput(placeholder: "Category name", text: this.draftName)
+                                        .backgroundColor(AppTheme.surfacePrimary())
+                                        .fontColor(AppTheme.textPrimary())
+                                        .borderRadius(20)
+                                        .padding(left: 14, right: 14, top: 12, bottom: 12)
+                                        .width(100.percent)
+                                        .onChange({ text =>
+                                            this.draftName = text
+                                        })
+
+                                    Row(space: 10) {
+                                        Row() {
+                                            AppIcon(name: resolveCategoryIconName(this.draftIcon), size: 18, color: Int64(AppTheme.brandPrimary()))
+                                        }
+                                        .width(36)
+                                        .height(36)
+                                        .justifyContent(FlexAlign.Center)
+                                        .alignItems(VerticalAlign.Center)
+                                        .borderRadius(18)
+                                        .backgroundColor(AppTheme.surfaceAccentSoft())
+
+                                        Column(space: 2) {
+                                            Text("Selected icon:")
+                                                .fontSize(13)
+                                                .fontColor(AppTheme.textPrimary())
+                                            Text(this.draftIcon)
+                                                .fontSize(12)
+                                                .fontColor(AppTheme.textSecondary())
+                                        }
+                                        .alignItems(HorizontalAlign.Start)
                                     }
-                                    .width(36)
-                                    .height(36)
-                                    .justifyContent(FlexAlign.Center)
+                                    .width(100.percent)
                                     .alignItems(VerticalAlign.Center)
-                                    .borderRadius(18)
-                                    .backgroundColor(AppTheme.surfaceAccentSoft())
-                                    Column(space: 2) {
-                                        Text("Selected icon:")
-                                            .fontSize(13)
-                                            .fontColor(AppTheme.textPrimary())
-                                        Text(this.draftIcon)
-                                            .fontSize(12)
-                                            .fontColor(AppTheme.textSecondary())
-                                    }
-                                    .alignItems(HorizontalAlign.Start)
-                                }
-                                .alignItems(VerticalAlign.Center)
-                                Row(space: 8) {
+                                    .justifyContent(FlexAlign.Center)
+
                                     Button("Choose Icon")
+                                        .width(100.percent)
                                         .backgroundColor(AppTheme.surfaceSecondary())
                                         .fontColor(AppTheme.textPrimary())
                                         .borderRadius(20)
                                         .onClick({ _ =>
                                             this.showIconPicker = true
                                         })
-                                    Button("Cancel")
-                                        .backgroundColor(AppTheme.surfaceSecondary())
-                                        .fontColor(AppTheme.textPrimary())
-                                        .borderRadius(20)
-                                        .onClick({ _ =>
-                                            this.closeEditors()
-                                        })
-                                    Button(if (this.showEditDialog) { "Save" } else { "Add" })
-                                        .fontColor(AppTheme.onBrandPrimary())
-                                        .backgroundColor(AppTheme.brandPrimary())
-                                        .borderRadius(20)
-                                        .enabled(this.draftName != "")
-                                        .onClick({ _ =>
-                                            if (this.showEditDialog) {
-                                                this.submitEdit()
-                                            } else {
-                                                this.submitAdd()
+
+                                    Row(space: 8) {
+                                        Button("Cancel")
+                                            .width(48.percent)
+                                            .backgroundColor(AppTheme.surfaceSecondary())
+                                            .fontColor(AppTheme.textPrimary())
+                                            .borderRadius(20)
+                                            .onClick({ _ =>
+                                                this.closeEditors()
+                                            })
+
+                                        Button(if (this.showEditDialog) { "Save" } else { "Add" })
+                                            .width(48.percent)
+                                            .fontColor(AppTheme.onBrandPrimary())
+                                            .backgroundColor(AppTheme.brandPrimary())
+                                            .borderRadius(20)
+                                            .enabled(this.draftName != "")
+                                            .onClick({ _ =>
+                                                if (this.showEditDialog) {
+                                                    this.submitEdit()
+                                                } else {
+                                                    this.submitAdd()
+                                                }
+                                            })
+                                    }
+                                    .width(100.percent)
+                                    .justifyContent(FlexAlign.SpaceBetween)
+
+                                    if (this.showIconPicker) {
+                                        Scroll() {
+                                            Column() {
+                                                IconPickerDialog(selectedIcon: this.draftIcon, visible: this.showIconPicker, draftIcon: this.draftIcon)
                                             }
-                                        })
+                                            .width(100.percent)
+                                        }
+                                        .scrollBar(BarState.Off)
+                                        .width(100.percent)
+                                        .height(280)
+                                    }
                                 }
+                                .width(100.percent)
                             }
-                        }
 
-                        if (this.showDeleteDialog) {
-                            Column(space: 10) {
-                                Text("Delete Category")
-                                    .fontSize(18)
-                                    .fontWeight(FontWeight.Medium)
-                                    .fontColor(AppTheme.textPrimary())
-                                Text("Are you sure you want to delete ${this.deleteLabel}?")
-                                    .fontSize(13)
-                                    .fontColor(AppTheme.textTertiary())
-                                Row(space: 8) {
-                                    Button("Cancel")
-                                        .backgroundColor(AppTheme.surfaceSecondary())
+                            if (this.showDeleteDialog) {
+                                Column(space: 10) {
+                                    Text("Delete Category")
+                                        .fontSize(18)
+                                        .fontWeight(FontWeight.Medium)
                                         .fontColor(AppTheme.textPrimary())
-                                        .borderRadius(18)
-                                        .onClick({ _ =>
-                                            this.showDeleteDialog = false
-                                            this.deleteId = ""
-                                            this.deleteLabel = ""
-                                        })
-                                    Button("Delete")
-                                        .fontColor(AppTheme.onBrandPrimary())
-                                        .backgroundColor(AppTheme.dangerPrimary())
-                                        .borderRadius(18)
-                                        .onClick({ _ =>
-                                            this.confirmDelete()
-                                        })
+                                    Text("Are you sure you want to delete ${this.deleteLabel}?")
+                                        .fontSize(13)
+                                        .fontColor(AppTheme.textTertiary())
+                                    Row(space: 8) {
+                                        Button("Cancel")
+                                            .width(48.percent)
+                                            .backgroundColor(AppTheme.surfaceSecondary())
+                                            .fontColor(AppTheme.textPrimary())
+                                            .borderRadius(18)
+                                            .onClick({ _ =>
+                                                this.showDeleteDialog = false
+                                                this.deleteId = ""
+                                                this.deleteLabel = ""
+                                            })
+                                        Button("Delete")
+                                            .width(48.percent)
+                                            .fontColor(AppTheme.onBrandPrimary())
+                                            .backgroundColor(AppTheme.dangerPrimary())
+                                            .borderRadius(18)
+                                            .onClick({ _ =>
+                                                this.confirmDelete()
+                                            })
+                                    }
+                                    .width(100.percent)
+                                    .justifyContent(FlexAlign.SpaceBetween)
                                 }
+                                .width(100.percent)
                             }
                         }
-
-                        if (this.showIconPicker) {
-                            IconPickerDialog(selectedIcon: this.draftIcon, visible: this.showIconPicker, draftIcon: this.draftIcon)
-                        }
+                        .width(88.percent)
+                        .padding(left: 18, right: 18, top: 18, bottom: 18)
+                        .borderRadius(28)
+                        .backgroundColor(AppTheme.surfaceElevated())
                     }
-                    .width(88.percent)
-                    .padding(left: 18, right: 18, top: 18, bottom: 18)
-                    .borderRadius(28)
-                    .backgroundColor(AppTheme.surfaceElevated())
+                    .scrollBar(BarState.Off)
+                    .width(100.percent)
+                    .height(82.percent)
                 }
                 .width(100.percent)
                 .height(100.percent)

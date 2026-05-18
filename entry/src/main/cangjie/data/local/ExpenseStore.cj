@@ -61,6 +61,14 @@ public class ExpenseStore {
         }
     }
 
+    private func categoriesAlreadySeeded(): Bool {
+        match (this.getPreferences(ExpenseStore.categoriesPrefsName)) {
+            case Option.Some(preferences) =>
+                this.getBoolPreference(preferences, ExpenseStore.categorySeededKey, false)
+            case _ => false
+        }
+    }
+
     private func expenseIdKey(index: Int64): String {
         "expense_id_${index}"
     }
@@ -328,9 +336,19 @@ public class ExpenseStore {
 
     public func initializeCategories(): Unit {
         this.ensureLoaded()
+
+        if (!ExpenseStore.dataLoaded) {
+            return
+        }
+
         if (ExpenseStore.sharedCategories.size > 0) {
             return
         }
+
+        if (this.categoriesAlreadySeeded()) {
+            return
+        }
+
         ExpenseStore.sharedCategories.add(Category(id: "1", name: "Bills", icon: "Payments"))
         ExpenseStore.sharedCategories.add(Category(id: "2", name: "Debt", icon: "CreditCard"))
         ExpenseStore.sharedCategories.add(Category(id: "3", name: "Education", icon: "School"))
@@ -494,14 +512,27 @@ public class ExpenseStore {
 
     public func deleteCategory(categoryId: String): Unit {
         this.ensureLoaded()
-        var deleteIndex: Int64 = -1
-        for (index in 0..ExpenseStore.sharedCategories.size - 1) {
-            if (ExpenseStore.sharedCategories[index].id == categoryId) {
-                deleteIndex = index
+
+        if (categoryId == "") {
+            return
+        }
+
+        let kept = ArrayList<Category>()
+        var removed = false
+
+        for (category in ExpenseStore.sharedCategories) {
+            if (category.id == categoryId) {
+                removed = true
+            } else {
+                kept.add(Category(id: category.id, name: category.name, icon: category.icon))
             }
         }
-        if (deleteIndex >= 0) {
-            ExpenseStore.sharedCategories.remove(deleteIndex..deleteIndex)
+
+        if (removed) {
+            ExpenseStore.sharedCategories.clear()
+            for (category in kept) {
+                ExpenseStore.sharedCategories.add(category)
+            }
             this.persistCategories()
             RouteState.notifyDataChanged()
         }
