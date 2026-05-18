@@ -5,9 +5,10 @@ import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.components.expenses.ExpensesByPeriodSection
 import ohos_app_cangjie_entry.data.model.Recurrence
 import ohos_app_cangjie_entry.data.model.toRecurrence
+import ohos_app_cangjie_entry.state.ChartsState
 import ohos_app_cangjie_entry.state.getChartsSnapshot
-import ohos_app_cangjie_entry.utils.calculateDateRange
 import ohos_app_cangjie_entry.utils.formatDayForRange
+import ohos_app_cangjie_entry.utils.formatMoney
 import ohos_app_cangjie_entry.theme.AppTheme
 
 @Component
@@ -20,22 +21,18 @@ public class ChartsSection {
         toRecurrence(this.recurrenceName)
     }
 
+    private func data(): ChartsState {
+        getChartsSnapshot(this.page, this.recurrence())
+    }
+
     private func dateRangeLabel(): String {
-        let data = getChartsSnapshot(this.page, this.recurrence())
-        formatDayForRange(data.dateStart) + " - " + formatDayForRange(data.dateEnd)
+        let data = this.data()
+        return "${formatDayForRange(data.dateStart)} - ${formatDayForRange(data.dateEnd)}"
     }
 
     private func totalLabel(): String {
-        let data = getChartsSnapshot(this.page, this.recurrence())
-        data.currencySymbol + data.totalInRange.toString()
-    }
-
-    private func rangeStart(): String {
-        calculateDateRange(this.recurrence(), this.page).start
-    }
-
-    private func rangeDays(): Int64 {
-        calculateDateRange(this.recurrence(), this.page).daysInRange
+        let data = this.data()
+        return formatMoney(data.totalInRange, data.currencySymbol)
     }
 
     public func build(): Unit {
@@ -55,17 +52,19 @@ public class ChartsSection {
             .borderRadius(24)
             .backgroundColor(AppTheme.surfacePrimary())
 
-            ChartMarker(label: "Tap the mode above to switch periods")
+            ChartMarker(label: "Selected period transactions appear below the chart")
+
             if (this.recurrenceName == "Weekly") {
-                WeeklyChart(expenses: getChartsSnapshot(this.page, this.recurrence()).expenses)
+                WeeklyChart(expenses: this.data().expenses)
             }
             if (this.recurrenceName == "Monthly") {
-                MonthlyChart(expenses: getChartsSnapshot(this.page, this.recurrence()).expenses, rangeStart: this.rangeStart(), daysInRange: this.rangeDays())
+                MonthlyChart(expenses: this.data().expenses, rangeStart: this.data().dateStart)
             }
             if (this.recurrenceName == "Yearly") {
-                YearlyChart(expenses: getChartsSnapshot(this.page, this.recurrence()).expenses)
+                YearlyChart(expenses: this.data().expenses)
             }
-            ExpensesByPeriodSection(title: "Transactions", expenses: getChartsSnapshot(this.page, this.recurrence()).expenses)
+
+            ExpensesByPeriodSection(title: "Transactions", expenses: this.data().expenses)
         }
         .width(100.percent)
     }

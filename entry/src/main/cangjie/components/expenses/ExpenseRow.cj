@@ -9,6 +9,7 @@ import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.local.PreferenceStore
 import ohos_app_cangjie_entry.data.model.Expense
 import ohos_app_cangjie_entry.theme.AppTheme
+import ohos_app_cangjie_entry.utils.formatExpenseMoney
 
 @Component
 public class ExpenseRow {
@@ -26,7 +27,7 @@ public class ExpenseRow {
 
     private func amountLabel(): String {
         let symbol = this.preferenceStore.getCurrencySymbol()
-        return "- ${symbol}${this.expense.amount}"
+        return formatExpenseMoney(this.expense.amount, symbol)
     }
 
     private func noteLabel(): String {

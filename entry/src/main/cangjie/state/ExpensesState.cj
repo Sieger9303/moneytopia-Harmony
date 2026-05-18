@@ -4,6 +4,7 @@ import std.collection.ArrayList
 import ohos_app_cangjie_entry.data.local.ExpenseStore
 import ohos_app_cangjie_entry.data.local.PreferenceStore
 import ohos_app_cangjie_entry.data.model.Expense
+import ohos_app_cangjie_entry.utils.formatMoney
 
 public class ExpensesState {
     public var totalExpenses: Float64 = 0.0
@@ -42,7 +43,7 @@ public func getDailyExpenseTotal(): String {
     let expenseStore = ExpenseStore()
     let symbol = preferenceStore.getCurrencySymbol()
     let total = expenseStore.getTotalAmountByRecurrenceName("Daily")
-    "${symbol}${total}"
+    formatMoney(total, symbol)
 }
 
 public func getDailyExpenseCount(): Int64 {

@@ -15,7 +15,7 @@ public class ExpensesPage {
                 HeaderCard(title: "Expenses", iconName: "wallet", actionIconName: "info", subtitle: "Track your spending today", dialogText: "Review today's total, open the full reports page with See All, and manage transactions from the expenses list.", actionRoute: "")
 
                 Column(space: 8) {
-                    Text("Total Expenses Today")
+                    Text("Total Expenses")
                         .fontSize(15)
                         .fontColor(AppTheme.textSecondary())
                     Text(getDailyExpenseTotal())
@@ -35,9 +35,10 @@ public class ExpensesPage {
                 ExpensesByDaySection()
 
                 Blank()
-                    .height(88)
+                    .height(140)
                     .width(100.percent)
             }
+            .padding(left: 16, right: 16, top: 18, bottom: 12)
             .width(100.percent)
         }
         .scrollBar(BarState.Off)

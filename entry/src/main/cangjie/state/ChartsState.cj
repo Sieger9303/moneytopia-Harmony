@@ -26,35 +26,54 @@ public class ChartsState {
     }
 }
 
-private func parseDay(day: String): DateTime {
-    DateTime.parse("${day} 00:00:00", "yyyy-MM-dd HH:mm:ss")
+private let storedDateTimeFormat = "yyyy-MM-dd HH:mm:ss"
+private let storedDayFormat = "yyyy-MM-dd"
+
+private func parseExpenseDate(expense: Expense): DateTime {
+    DateTime.parse(expense.dateValue, storedDateTimeFormat)
 }
 
-private func parseExpenseDay(expense: Expense): DateTime {
-    DateTime.parse(expense.dateValue, "yyyy-MM-dd HH:mm:ss")
+private func parseRangeDay(day: String): DateTime {
+    DateTime.parse("${day} 00:00:00", storedDateTimeFormat)
 }
 
-private func isInRange(expense: Expense, start: DateTime, end: DateTime): Bool {
-    let day = parseExpenseDay(expense)
-    day >= start && day <= end
+private func endOfRangeDay(day: String): DateTime {
+    DateTime.parse("${day} 23:59:59", storedDateTimeFormat)
+}
+
+private func sortExpensesAscending(expenses: ArrayList<Expense>): ArrayList<Expense> {
+    if (expenses.size <= 1) {
+        return expenses
+    }
+    for (outer in 0..expenses.size - 1) {
+        for (inner in 0..expenses.size - 2) {
+            if (expenses[inner].dateValue > expenses[inner + 1].dateValue) {
+                let current = expenses[inner]
+                expenses[inner] = expenses[inner + 1]
+                expenses[inner + 1] = current
+            }
+        }
+    }
+    expenses
 }
 
 public func getChartsSnapshot(page: Int64, recurrence: Recurrence): ChartsState {
     let expenseStore = ExpenseStore()
     let preferenceStore = PreferenceStore()
     let range = calculateDateRange(recurrence, page)
-    let start = parseDay(range.start)
-    let end = parseDay(range.end)
+    let start = parseRangeDay(range.start)
+    let end = endOfRangeDay(range.end)
     let expenses = ArrayList<Expense>()
     var total: Float64 = 0.0
     for (expense in expenseStore.getExpenses()) {
-        if (isInRange(expense, start, end)) {
+        let expenseDate = parseExpenseDate(expense)
+        if (expenseDate >= start && expenseDate <= end) {
             expenses.add(expense)
             total += expense.amount
         }
     }
     ChartsState(
-        expenses: expenses,
+        expenses: sortExpensesAscending(expenses),
         dateStart: range.start,
         dateEnd: range.end,
         totalInRange: total,

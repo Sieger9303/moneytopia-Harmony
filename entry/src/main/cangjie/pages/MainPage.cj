@@ -42,16 +42,6 @@ public class MainPage {
         return this.currentRoute == "expenses"
     }
 
-    private func contentBottomPadding(): Int64 {
-        if (this.showBottomBar()) {
-            if (this.showFloatingAdd()) {
-                return 104
-            }
-            return 24
-        }
-        return 24
-    }
-
     public func aboutToAppear(): Unit {
         RouteState.setChangeHandler({ =>
             this.syncRoute()
@@ -59,45 +49,44 @@ public class MainPage {
         this.syncRoute()
     }
 
+    @Builder
+    private func activePage(): Unit {
+        if (this.currentRoute == "expenses") {
+            ExpensesPage()
+        }
+        if (this.currentRoute == "expenses/add_expenses") {
+            AddExpensePage()
+        }
+        if (this.currentRoute == "reports") {
+            ReportsPage()
+        }
+        if (this.currentRoute == "analytics") {
+            AnalyticsPage()
+        }
+        if (this.currentRoute == "settings") {
+            SettingsPage()
+        }
+        if (this.currentRoute == "settings/languages") {
+            LanguagesPage()
+        }
+        if (this.currentRoute == "settings/about") {
+            AboutPage()
+        }
+        if (this.currentRoute == "settings/about/web") {
+            WebLinkPage()
+        }
+        if (this.currentRoute == "settings/categories") {
+            CategoryPage()
+        }
+    }
+
     public func build(): Unit {
         Column() {
             if (this.showBottomBar()) {
                 Stack() {
-                    Scroll() {
-                        Column() {
-                            if (this.currentRoute == "expenses") {
-                                ExpensesPage()
-                            }
-                            if (this.currentRoute == "expenses/add_expenses") {
-                                AddExpensePage()
-                            }
-                            if (this.currentRoute == "reports") {
-                                ReportsPage()
-                            }
-                            if (this.currentRoute == "analytics") {
-                                AnalyticsPage()
-                            }
-                            if (this.currentRoute == "settings") {
-                                SettingsPage()
-                            }
-                            if (this.currentRoute == "settings/languages") {
-                                LanguagesPage()
-                            }
-                            if (this.currentRoute == "settings/about") {
-                                AboutPage()
-                            }
-                            if (this.currentRoute == "settings/about/web") {
-                                WebLinkPage()
-                            }
-                            if (this.currentRoute == "settings/categories") {
-                                CategoryPage()
-                            }
-                        }
-                        .padding(left: 16, right: 16, top: 18, bottom: this.contentBottomPadding())
-                        .width(100.percent)
-                        .alignItems(HorizontalAlign.Center)
+                    Column() {
+                        this.activePage()
                     }
-                    .scrollBar(BarState.Off)
                     .width(100.percent)
                     .height(100.percent)
 
@@ -167,33 +156,7 @@ public class MainPage {
             } else {
                 Scroll() {
                     Column() {
-                        if (this.currentRoute == "expenses") {
-                            ExpensesPage()
-                        }
-                        if (this.currentRoute == "expenses/add_expenses") {
-                            AddExpensePage()
-                        }
-                        if (this.currentRoute == "reports") {
-                            ReportsPage()
-                        }
-                        if (this.currentRoute == "analytics") {
-                            AnalyticsPage()
-                        }
-                        if (this.currentRoute == "settings") {
-                            SettingsPage()
-                        }
-                        if (this.currentRoute == "settings/languages") {
-                            LanguagesPage()
-                        }
-                        if (this.currentRoute == "settings/about") {
-                            AboutPage()
-                        }
-                        if (this.currentRoute == "settings/about/web") {
-                            WebLinkPage()
-                        }
-                        if (this.currentRoute == "settings/categories") {
-                            CategoryPage()
-                        }
+                        this.activePage()
                     }
                     .padding(left: 16, right: 16, top: 18, bottom: 24)
                     .width(100.percent)

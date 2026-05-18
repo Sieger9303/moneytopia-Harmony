@@ -7,6 +7,7 @@ import ohos_app_cangjie_entry.data.local.PreferenceStore
 import ohos_app_cangjie_entry.data.model.Expense
 import ohos_app_cangjie_entry.utils.formatDay
 import ohos_app_cangjie_entry.theme.AppTheme
+import ohos_app_cangjie_entry.utils.formatExpenseMoney
 
 @Component
 public class ExpensesDayGroup {
@@ -19,7 +20,7 @@ public class ExpensesDayGroup {
 
     private func totalLabel(): String {
         let symbol = this.preferenceStore.getCurrencySymbol()
-        return "- ${symbol}${this.total}"
+        return formatExpenseMoney(this.total, symbol)
     }
 
     public func build(): Unit {

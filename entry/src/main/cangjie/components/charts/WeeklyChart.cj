@@ -1,11 +1,12 @@
 package ohos_app_cangjie_entry.components.charts
 
-import kit.ArkUI.*
-import ohos.arkui.state_macro_manage.*
 import std.collection.ArrayList
 import std.time.*
+import kit.ArkUI.*
+import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.data.model.Expense
 import ohos_app_cangjie_entry.theme.AppTheme
+import ohos_app_cangjie_entry.utils.formatCompactAmount
 
 public class WeeklyChartPoint {
     public var id: String = ""
@@ -54,29 +55,40 @@ public class WeeklyChart {
                 .fontSize(16)
                 .fontWeight(FontWeight.Medium)
                 .fontColor(AppTheme.textPrimary())
-            ForEach(this.points(), itemGeneratorFunc: { point: WeeklyChartPoint, _: Int64 =>
-                Column(space: 4) {
-                    Row(space: 8) {
-                        Text(point.label)
-                            .fontSize(13)
-                            .fontColor(AppTheme.textSecondary())
-                        Text(point.total.toString())
-                            .fontSize(13)
-                            .fontWeight(FontWeight.Medium)
-                            .fontColor(AppTheme.textPrimary())
+
+            Column(space: 8) {
+                ForEach(this.points(), itemGeneratorFunc: { point: WeeklyChartPoint, _: Int64 =>
+                    Column(space: 4) {
+                        Row(space: 8) {
+                            Text(point.label)
+                                .fontSize(13)
+                                .fontColor(AppTheme.textSecondary())
+                            Text(formatCompactAmount(point.total))
+                                .fontSize(13)
+                                .fontWeight(FontWeight.Medium)
+                                .fontColor(AppTheme.textPrimary())
+                        }
+                        .width(100.percent)
+                        .justifyContent(FlexAlign.SpaceBetween)
+
+                        Row() {
+                            Row() {}
+                                .width(if (point.total <= 0.0) { 8 } else { 72 })
+                                .height(8)
+                                .borderRadius(999)
+                                .backgroundColor(AppTheme.brandPrimary())
+                        }
+                        .width(100.percent)
+                        .padding(left: 4, right: 4)
+                        .alignItems(VerticalAlign.Center)
                     }
                     .width(100.percent)
-                    .justifyContent(FlexAlign.SpaceBetween)
-                    Row() {}
-                        .width(100.percent)
-                        .height(8)
-                        .borderRadius(999)
-                        .backgroundColor(AppTheme.brandPrimary())
-                }
-                .width(100.percent)
-            }, keyGeneratorFunc: { point: WeeklyChartPoint, _: Int64 =>
-                point.id
-            })
+                }, keyGeneratorFunc: { point: WeeklyChartPoint, _: Int64 => point.id })
+            }
+            .padding(left: 10, right: 10, top: 12, bottom: 12)
+            .width(100.percent)
+            .borderRadius(20)
+            .backgroundColor(AppTheme.surfaceElevated())
         }
         .padding(left: 16, right: 16, top: 16, bottom: 16)
         .width(100.percent)
