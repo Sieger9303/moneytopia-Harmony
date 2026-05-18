@@ -1,6 +1,7 @@
 package ohos_app_cangjie_entry.components.charts
 
 import std.collection.ArrayList
+import std.convert.*
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.theme.AppTheme
@@ -53,7 +54,9 @@ public class GridLinePoint {
 public class LineChartCard {
     @Prop var title: String
     @Prop var subtitle: String
-    @Prop var points: ArrayList<LineChartPoint>
+    @Prop var pointLabelsKey: String
+    @Prop var pointTotalsKey: String
+    @Prop var periodKey: String
 
     private func chartWidth(): Float64 { 320.0 }
     private func chartHeight(): Float64 { 160.0 }
@@ -64,7 +67,7 @@ public class LineChartCard {
     private func drawableHeight(): Float64 { this.chartHeight() - this.verticalPadding() * 2.0 }
 
     private func hasVisibleLabels(): Bool {
-        for (point in this.points) {
+        for (point in this.points()) {
             if (point.label != "") {
                 return true
             }
@@ -72,9 +75,27 @@ public class LineChartCard {
         false
     }
 
+    private func points(): ArrayList<LineChartPoint> {
+        let items = ArrayList<LineChartPoint>()
+        let labels = this.pointLabelsKey.split("|")
+        let totals = this.pointTotalsKey.split("|")
+        let count = if (labels.size < totals.size) { labels.size } else { totals.size }
+        if (count <= 0) {
+            return items
+        }
+        for (index in 0..count - 1) {
+            items.add(LineChartPoint(
+                id: "${this.periodKey}-point_${index}",
+                label: labels[index],
+                total: Float64.parse(totals[index])
+            ))
+        }
+        items
+    }
+
     private func maxTotal(): Float64 {
         var maxValue: Float64 = 0.0
-        for (point in this.points) {
+        for (point in this.points()) {
             if (point.total > maxValue) {
                 maxValue = point.total
             }
@@ -83,10 +104,11 @@ public class LineChartCard {
     }
 
     private func stepWidth(): Float64 {
-        if (this.points.size <= 1) {
+        let points = this.points()
+        if (points.size <= 1) {
             return this.drawableWidth()
         }
-        this.drawableWidth() / Float64(this.points.size - 1)
+        this.drawableWidth() / Float64(points.size - 1)
     }
 
     private func pointCenterX(index: Int64): Float64 {
@@ -106,18 +128,20 @@ public class LineChartCard {
     }
 
     private func pointY(index: Int64): Float64 {
-        this.pointCenterY(this.points[index].total)
+        let points = this.points()
+        this.pointCenterY(points[index].total)
     }
 
     private func segments(): ArrayList<LineChartSegment> {
         let items = ArrayList<LineChartSegment>()
-        if (this.points.size <= 1) {
+        let points = this.points()
+        if (points.size <= 1) {
             return items
         }
-        for (index in 0..this.points.size - 2) {
+        for (index in 0..points.size - 2) {
             let nextIndex = index + 1
             items.add(LineChartSegment(
-                id: "segment_${index}",
+                id: "${this.periodKey}-segment_${index}",
                 startX: this.pointX(index),
                 startY: this.pointY(index),
                 endX: this.pointX(nextIndex),
@@ -132,7 +156,7 @@ public class LineChartCard {
         for (index in 0..4) {
             let ratio = Float64(index) / 4.0
             items.add(GridLinePoint(
-                id: "grid_${index}",
+                id: "${this.periodKey}-grid_${index}",
                 y: this.verticalPadding() + this.drawableHeight() * ratio
             ))
         }
@@ -168,7 +192,7 @@ public class LineChartCard {
 
             if (this.hasVisibleLabels()) {
                 Row() {
-                    ForEach(this.points, itemGeneratorFunc: { point: LineChartPoint, _: Int64 =>
+                    ForEach(this.points(), itemGeneratorFunc: { point: LineChartPoint, _: Int64 =>
                         Text(point.label)
                             .fontSize(10)
                             .fontColor(AppTheme.textSecondary())

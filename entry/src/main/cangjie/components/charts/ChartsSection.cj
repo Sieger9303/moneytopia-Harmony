@@ -37,14 +37,6 @@ public class ChartsSection {
         return formatMoney(data.totalInRange, data.currencySymbol)
     }
 
-    private func periodExpenses(): ArrayList<Expense> {
-        this.data().expenses
-    }
-
-    private func rangeStartValue(): String {
-        this.data().dateStart
-    }
-
     public func build(): Unit {
         Column(space: 14) {
             Column(space: 4) {
@@ -63,16 +55,16 @@ public class ChartsSection {
             .backgroundColor(AppTheme.surfacePrimary())
 
             if (this.recurrenceName == "Weekly") {
-                WeeklyChart(expenses: this.periodExpenses())
+                WeeklyChart(page: this.page, recurrenceName: this.recurrenceName)
             }
             if (this.recurrenceName == "Monthly") {
-                MonthlyChart(expenses: this.periodExpenses(), rangeStart: this.rangeStartValue())
+                MonthlyChart(page: this.page, recurrenceName: this.recurrenceName)
             }
             if (this.recurrenceName == "Yearly") {
-                YearlyChart(expenses: this.periodExpenses())
+                YearlyChart(page: this.page, recurrenceName: this.recurrenceName)
             }
 
-            ExpensesByPeriodSection(title: "", expenses: this.periodExpenses())
+            ExpensesByPeriodSection(title: "", page: this.page, recurrenceName: this.recurrenceName)
         }
         .width(100.percent)
     }

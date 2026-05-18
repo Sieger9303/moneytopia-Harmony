@@ -5,14 +5,30 @@ import std.time.*
 import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import ohos_app_cangjie_entry.data.model.Expense
+import ohos_app_cangjie_entry.data.model.Recurrence
+import ohos_app_cangjie_entry.data.model.toRecurrence
+import ohos_app_cangjie_entry.state.getChartsSnapshot
 
 @Component
 public class YearlyChart {
-    @Prop var expenses: ArrayList<Expense>
+    @Prop var page: Int64
+    @Prop var recurrenceName: String
+
+    private func recurrence(): Recurrence {
+        toRecurrence(this.recurrenceName)
+    }
+
+    private func selectedExpenses(): ArrayList<Expense> {
+        getChartsSnapshot(this.page, this.recurrence()).expenses
+    }
+
+    private func periodKey(): String {
+        "${this.recurrenceName}-${this.page}-${this.pointTotalsKey()}"
+    }
 
     private func totalFor(monthName: String): Float64 {
         var total: Float64 = 0.0
-        for (expense in this.expenses) {
+        for (expense in this.selectedExpenses()) {
             let expenseDay = DateTime.parse(expense.dateValue, "yyyy-MM-dd HH:mm:ss")
             if (expenseDay.month.toString() == monthName) {
                 total += expense.amount
@@ -21,21 +37,12 @@ public class YearlyChart {
         total
     }
 
-    private func points(): ArrayList<LineChartPoint> {
-        let items = ArrayList<LineChartPoint>()
-        items.add(LineChartPoint(id: "jan", label: "Jan", total: this.totalFor("January")))
-        items.add(LineChartPoint(id: "feb", label: "Feb", total: this.totalFor("February")))
-        items.add(LineChartPoint(id: "mar", label: "Mar", total: this.totalFor("March")))
-        items.add(LineChartPoint(id: "apr", label: "Apr", total: this.totalFor("April")))
-        items.add(LineChartPoint(id: "may", label: "May", total: this.totalFor("May")))
-        items.add(LineChartPoint(id: "jun", label: "Jun", total: this.totalFor("June")))
-        items.add(LineChartPoint(id: "jul", label: "Jul", total: this.totalFor("July")))
-        items.add(LineChartPoint(id: "aug", label: "Aug", total: this.totalFor("August")))
-        items.add(LineChartPoint(id: "sep", label: "Sep", total: this.totalFor("September")))
-        items.add(LineChartPoint(id: "oct", label: "Oct", total: this.totalFor("October")))
-        items.add(LineChartPoint(id: "nov", label: "Nov", total: this.totalFor("November")))
-        items.add(LineChartPoint(id: "dec", label: "Dec", total: this.totalFor("December")))
-        items
+    private func pointLabelsKey(): String {
+        "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec"
+    }
+
+    private func pointTotalsKey(): String {
+        "${this.totalFor("January")}|${this.totalFor("February")}|${this.totalFor("March")}|${this.totalFor("April")}|${this.totalFor("May")}|${this.totalFor("June")}|${this.totalFor("July")}|${this.totalFor("August")}|${this.totalFor("September")}|${this.totalFor("October")}|${this.totalFor("November")}|${this.totalFor("December")}"
     }
 
     public func build(): Unit {
@@ -43,7 +50,9 @@ public class YearlyChart {
             LineChartCard(
                 title: "",
                 subtitle: "",
-                points: this.points()
+                pointLabelsKey: this.pointLabelsKey(),
+                pointTotalsKey: this.pointTotalsKey(),
+                periodKey: this.periodKey()
             )
         }
     }

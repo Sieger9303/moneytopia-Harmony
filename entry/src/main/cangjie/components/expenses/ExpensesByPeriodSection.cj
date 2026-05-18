@@ -4,17 +4,28 @@ import kit.ArkUI.*
 import ohos.arkui.state_macro_manage.*
 import std.collection.ArrayList
 import ohos_app_cangjie_entry.data.model.Expense
+import ohos_app_cangjie_entry.data.model.Recurrence
+import ohos_app_cangjie_entry.data.model.toRecurrence
+import ohos_app_cangjie_entry.state.getChartsSnapshot
 import ohos_app_cangjie_entry.theme.AppTheme
-import ohos_app_cangjie_entry.utils.formatDay
 
 @Component
 public class ExpensesByPeriodSection {
     @Prop var title: String
-    @Prop var expenses: ArrayList<Expense>
+    @Prop var page: Int64
+    @Prop var recurrenceName: String
+
+    private func recurrence(): Recurrence {
+        toRecurrence(this.recurrenceName)
+    }
+
+    private func selectedExpenses(): ArrayList<Expense> {
+        getChartsSnapshot(this.page, this.recurrence()).expenses
+    }
 
     private func uniqueSortedDatesDescending(): ArrayList<String> {
         let dates = ArrayList<String>()
-        for (expense in this.expenses) {
+        for (expense in this.selectedExpenses()) {
             let dateOnly = expense.dateValue.split(" ")[0]
             var exists = false
             for (existing in dates) {
@@ -47,7 +58,7 @@ public class ExpensesByPeriodSection {
 
     private func expensesForDate(dateValue: String): ArrayList<Expense> {
         let matches = ArrayList<Expense>()
-        for (expense in this.expenses) {
+        for (expense in this.selectedExpenses()) {
             if (expense.dateValue.startsWith(dateValue + " ") || expense.dateValue == dateValue) {
                 matches.add(expense)
             }
@@ -69,12 +80,16 @@ public class ExpensesByPeriodSection {
 
     private func totalForDate(dateValue: String): Float64 {
         var total: Float64 = 0.0
-        for (expense in this.expenses) {
+        for (expense in this.selectedExpenses()) {
             if (expense.dateValue.startsWith(dateValue + " ") || expense.dateValue == dateValue) {
                 total += expense.amount
             }
         }
         total
+    }
+
+    private func hasSelectedExpenses(): Bool {
+        this.selectedExpenses().size > 0
     }
 
     public func build(): Unit {
@@ -86,7 +101,7 @@ public class ExpensesByPeriodSection {
                     .fontColor(AppTheme.textPrimary())
             }
 
-            if (this.expenses.size == 0) {
+            if (!this.hasSelectedExpenses()) {
                 Text("Transaction history for this time period is not available.")
                     .fontSize(14)
                     .fontColor(AppTheme.textSecondary())
@@ -104,7 +119,7 @@ public class ExpensesByPeriodSection {
                             allowDelete: false
                         )
                     }, keyGeneratorFunc: { dateValue: String, _: Int64 =>
-                        dateValue
+                        "${this.recurrenceName}-${this.page}-${dateValue}"
                     })
                 }
                 .width(100.percent)
